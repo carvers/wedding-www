@@ -1,0 +1,38 @@
+html, body {
+	height: 100%;
+}
+
+body {
+	background-image: url('/sky.jpg');
+}
+
+.fullDiv {
+	height: 100%;
+	width: 100%;
+}
+
+.sky {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10% 0;
+}
+
+.moon {
+	max-width: 300px;
+	margin: 0 auto;
+	display: block;
+}
+
+.slider {
+	display: block;
+	margin: 0 auto;
+	width: 50%;
+}
+
+.day {
+	color: #f3e7cd;
+	font-family: 'Palanquin', sans-serif;
+	text-align: center;
+	text-transform: uppercase;
+}

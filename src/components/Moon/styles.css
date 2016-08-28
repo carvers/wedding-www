@@ -1,0 +1,12 @@
+.cls2 {
+	clip-path: url(#clip-path);
+}
+
+.cls3 {
+	opacity: 0.6;
+	fill: url(#radial-gradient);
+}
+
+.moonBack {
+	opacity: .01;
+}
