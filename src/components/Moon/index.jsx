@@ -34,7 +34,7 @@ class Moon extends React.Component {
 		let arc = calculateArcs(phase(this.props.date))
 		return (
 			<div className={this.props.className}>
-				<svg viewBox="0 0 248.18 248.18" className={this.props.className}>
+				<svg viewBox="0 0 248.18 248.18">
 					<defs>
 						<clipPath id="clip-path">
 							<path d={'m124.09,0 a'+arc.rx+',124.09 0 1,'+arc.sweep0+' 0,248.18 a124.09,124.09 0 1,'+arc.sweep1+' 0,-248.18'}></path>
@@ -48,8 +48,7 @@ class Moon extends React.Component {
 							<stop offset="0.94" stopColor="#fffcd7" stopOpacity="0"/>
 						</radialGradient>
 					</defs>
-					<image className={styles.moonBack} width="673" height="674" transform="scale(0.37)" xlinkHref="/moon.png"/>
-					<g className={styles.cls2}>
+					<g clipPath='url(#clip-path)'>
 						<image width="673" height="674" transform="scale(0.37)" xlinkHref="/moon.png"/>
 						<circle className={styles.cls3} cx="124.09" cy="124.09" r="124.09"/>
 					</g>

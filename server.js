@@ -11,7 +11,7 @@ import webpack from 'webpack';
 import config from './webpack.config.dev.js';
 
 const Html = ({
-  title = 'Rainbow Unicorns',
+  title = 'Wedding Website',
   bundle = '/app.js',
   body = '',
   stylesheet = '/app.css',
@@ -26,7 +26,7 @@ const Html = ({
 			<link rel='icon' type='image/png' href='/favicon-32x32.png' sizes='32x32' />
 			<link rel='icon' type='image/png' href='/favicon-16x16.png' sizes='16x16' />
 			<link rel='mask-icon' href='/safari-pinned-tab.svg' color='#5bbad5' />
-			<link href='https://fonts.googleapis.com/css?family=Palanquin:300' rel='stylesheet'/>
+			<link href='https://fonts.googleapis.com/css?family=Josefin+Sans:300|Palanquin:300' rel='stylesheet' /> 
       {stylesheet ? <link rel='stylesheet' href={stylesheet} /> : null}
     </head>
     <body>

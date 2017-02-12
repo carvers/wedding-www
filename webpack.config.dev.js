@@ -10,7 +10,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 // details on why we need this URL see the readme and:
 // https://github.com/glenjamin/webpack-hot-middleware/issues/37
 var DEV_PORT = process.env.DEV_PORT || 3000;
-var DEV_HOST = '//peter.local:' + DEV_PORT + '/';
+var DEV_HOST = '//10.0.1.10:' + DEV_PORT + '/';
 var HMR_HOST = DEV_HOST + '__webpack_hmr';
 
 module.exports = {

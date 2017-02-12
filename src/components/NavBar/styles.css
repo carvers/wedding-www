@@ -1,0 +1,77 @@
+.bar {
+	margin-left: 1rem;
+	margin-top: .5rem;
+}
+
+.bar li {
+	font-family: 'Palanquin', sans-serif;
+	font-size: 1.5rem;
+	display: inline-block;
+	margin: 0 .5rem;
+}
+ 
+.bar a {
+  text-decoration: none;
+  display: block;
+	color: #fff;
+	border-bottom: none;
+}
+
+.bar a:visited {
+	color: #fff;
+	border-bottom: 1px #fff solid;
+}
+
+.bar a.activeLink {
+	border-bottom: 1px #fff solid;
+}
+
+.bar a:active {
+	color: #fff;
+	border-bottom: 1px #fff solid;
+}
+
+.bar a:hover {
+	border-bottom: 1px #fff solid;
+}
+
+.moon {
+	max-width: 150px;
+	margin: 0 2rem 2rem auto;
+	display: block;
+}
+
+.menu {
+	float: left;
+	color: white;
+  list-style: none;
+  padding: 0;
+	margin: 0;
+}
+
+.overMoon {
+	display: block;
+}
+
+.underMoon {
+	display: none;
+	margin: 0 auto 2em;
+	text-align: center;
+	width: 100%;
+}
+
+@media (max-width: 800px) {
+	.overMoon {
+		display: none;
+	}
+	.underMoon {
+		display: block;
+	}
+	.moon {
+		margin: 1rem auto;
+	}
+}
+
+.clear {
+	clear: both;
+}

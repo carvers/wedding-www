@@ -1,0 +1,22 @@
+.tableOfContents {
+	float: left;
+	list-style: none;
+	padding: 0;
+	margin: 0 auto 2em;
+	width: 100%;
+	display: block;
+	text-align: center;
+}
+
+.tableOfContents li {
+	display: inline-block;
+	margin: .5rem .5rem;
+}
+
+.tableOfContents a {
+	display: block;
+}
+
+.clear {
+	clear: both;
+}
