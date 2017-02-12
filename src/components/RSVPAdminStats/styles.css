@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+	font-size: 2em;
+	line-height: 1.75em;
+	font-family: 'Palanquin',sans-serif;
+}
+
+.totals {
+	padding: 2em;
+	padding-top: .25em;
+}
+
+.totals td {
+	padding: 0 .5em;
+}
+
+.totals .numbers {
+	text-align: right;
+}
+
+.chart {
+	width: 40%;
+	padding: 1em;
+}
+
+.chart canvas {
+	max-width: 325px;
+	max-height: 325px;
+}

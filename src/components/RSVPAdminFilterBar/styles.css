@@ -1,0 +1,11 @@
+.bar {
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 0 auto;
+}
+
+.bar select, .bar input {
+	margin: 0 1em;
+}

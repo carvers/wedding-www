@@ -1,0 +1,24 @@
+.centered {
+  text-align: center;
+}
+
+.fullWidth {
+  width: 90%;
+	margin: 0 auto;
+}
+
+.sortable {
+	cursor: pointer;
+}
+
+.green {
+	color: #869260;
+}
+
+.red {
+	color: #914f50;
+}
+
+.header {
+	font-family: 'Palanquin', sans-serif;
+}

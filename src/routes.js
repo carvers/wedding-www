@@ -9,6 +9,7 @@ import Travel from './components/Travel'
 import Party from './components/Party'
 import Registry from './components/Registry'
 import RSVP from './components/RSVP'
+import RSVPAdmin from './components/RSVPAdmin'
 
 export const routes = (
   <Route path='/' component={App}>
@@ -17,7 +18,10 @@ export const routes = (
     <Route path='travel' component={Travel} />
     <Route path='party' component={Party} />
     <Route path='registry' component={Registry} />
-    <Route path='rsvp' component={RSVP} />
+    <Route path='rsvp'>
+			<IndexRoute component={RSVP} />
+			<Route path='admin' component={RSVPAdmin} />
+		</Route>
     <Route path='*' component={NotFound} />
   </Route>
 );
