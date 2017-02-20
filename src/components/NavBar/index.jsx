@@ -18,7 +18,6 @@ export default class NavBar extends React.Component {
 					<li><IndexLink activeClassName={styles.activeLink} to="/">Home</IndexLink></li>
 					<li><Link activeClassName={styles.activeLink} to="/about">Details</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/registry">Registry</Link></li>
 				</ul>
 				<div className={styles.clear} />
