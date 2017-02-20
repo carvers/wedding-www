@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 /**
  * This file allows you to customize how the app is built in development mode.
  * By default all we do is modify the entry point to include normalize.css and
@@ -15,18 +18,33 @@ module.exports = (config, apptime) => ({
   //// If you need to wrap your compiled pages in a redux store before render you
   //// can use this option
   //
-  // ...apptime.ReactStaticPlugin({
-  //   routes: './client/routes.js',
-  //   template: './template.js',
-  //   reduxStore: './client/store.js',
-  // }),
+  ...apptime.ReactStaticPlugin({
+     routes: './client/routes.js',
+     template: './template.js',
+     reduxStore: './client/store.jsx',
+  }),
 
   entry: {
     ...config.entry, // Make sure the vendor entry point is included
     app: [
 			'normalize.css',
       apptime.polyfill,
-      './client/index.js',
+      './client/index.jsx',
     ],
   },
+	module: {
+		...config.module,
+		rules: [
+			...config.module.rules,
+			{
+				test: /\.jsx$/,
+				exclude: path.resolve(fs.realpathSync(process.cwd()), './node_modules'),
+				loader: 'babel-loader',
+			},
+		],
+	},
+	resolve: {
+		...config.resolve,
+		extensions: ['.js', '.jsx'],
+	}
 });

@@ -6,3 +6,4 @@ nginx.conf
 npm-debug.log
 .idea
 .apptime
+build/

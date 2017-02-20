@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-	background: #193040 url('/sky.png') 0 0 no-repeat;
+	background: #193040 url('./sky.png') 0 0 no-repeat;
 	font-size: 1.5rem;
 	line-height: 2.5rem;
 	font-family: 'Josefin Sans', sans-serif;

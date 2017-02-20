@@ -49,7 +49,7 @@ class Moon extends React.Component {
 						</radialGradient>
 					</defs>
 					<g clipPath='url(#clip-path)'>
-						<image width="673" height="674" transform="scale(0.37)" xlinkHref="/moon.png"/>
+						<image width="673" height="674" transform="scale(0.37)" xlinkHref={moonImg}/>
 						<circle className={styles.cls3} cx="124.09" cy="124.09" r="124.09"/>
 					</g>
 				</svg>

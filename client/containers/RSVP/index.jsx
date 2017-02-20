@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { fetchPartyByCodeWordIfNeeded } from '../../actions'
 
-import RSVPAuth from '../../components/RSVPAuth'
+//import RSVPAuth from '../../components/RSVPAuth'
 
 class RSVP extends React.Component {
 	static propTypes = {
@@ -19,15 +19,18 @@ class RSVP extends React.Component {
 	}
 
 	render() {
-		if (this.props.codeWord === null || this.props.codeWord.length < 1 || this.props.partyID === null || this.props.partyID.length < 1) {
+		/*if (this.props.codeWord === null || this.props.codeWord.length < 1 || this.props.partyID === null || this.props.partyID.length < 1) {
 			return (
 				<RSVPAuth codeWord={this.props.codeWord} onSubmit={this.fetchPartyByCodeWord(word)} />
 			)
-		} else {
+			} else {
 			return (
 				<RSVPParty party={this.props.partyID} />
 			)
-		}
+			}*/
+		return (
+			<div>{this.props.codeWord}</div>
+		)
 	}
 }
 

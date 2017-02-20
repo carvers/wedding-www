@@ -2,7 +2,7 @@
 
 # React Static Boilerplate
 
-A boilerplate for building static sites with [React][] and [React Router][]
+A boilerplate for building static sites with [Webpack][], [React][] and [React Router][].
 
 **Quick Start:**
 
@@ -15,18 +15,52 @@ A boilerplate for building static sites with [React][] and [React Router][]
 
 Now you're all set to deploy to your favorite hosting solution :beers:
 
+To check your production build use pushstate-server
+`npm install pushstate-server -g`
+`pushstate-server build`
+
 **NOTE:** It's important to run `npm run build` and **not** `npm build`. The latter will silently exit because it is a native NPM command.
+
+## Changes Jan 2017
+
+Webpack 2 was just released. In celebration, here are some fun new features:
+
+* Dev tooling is a dependency! It is no longer part of this repo. This means future upgrades will be a breeze.
+* Support for Webpack 2
+* Fully mocked client side environment, so code that requires the DOM/BOM should still compile
+* Support for [webpack-dashbaord][] + improved dev server logging (`npm run start:dashboard`)
+* Asset fingerprinting to make long-term caching a breeze (Adds hash to output files. Ex `app.72266bec.js`)
+* Analyze the size of your bundle [webpack-bundle-analyzer plugin][] (`npm run build:analyze`. See screenshot below of output below)
+
+[webpack-bundle-analyzer plugin]: https://github.com/th0r/webpack-bundle-analyzer
+[webpack-dashbaord]: https://github.com/FormidableLabs/webpack-dashboard
+
+## Usage Commands
+
+**`npm run start`**: Start a dev server
+
+**`npm run start:dashboard`**: Start a dev server with Webpack Dashboard
+
+**`npm run build`**: Compile, minify and fingerprint everything and create static files from routes
+
+**`npm run build:analyze`**: Same as above, but will also output `webpack-bundle-analyzer-stats.json` and `webpack-bundle-analyzer-report.html` for you to analyze. Open the HTML file in a web browser to analyze the bundle. Or from the CLI:
+
+```
+open build/webpack-bundle-analyzer-report.html
+```
+
+![webpack-bundle-analyzer](http://dropsinn.s3.amazonaws.com/Screen%20Shot%202017-01-18%20at%2012.05.15%20PM.png)
 
 ## Project Goals
 
 * A single source of truth: Your routes
-* Intuitive. Leverage existing font-end knowledge
+* Intuitive. Leverage existing front-end knowledge
 * Awesome developer experience
 * Flexible. No file structure or naming conventions required. Use whatever modules you want
 
 ## Dynamic Routes
 
-**Iportant Note:** This boilerplate does not yet support generating static sites for dynamic routes such as `post/:id`. That's the next major feature addition (see the [Roadmap below](#roadmap)) but it hasn't been implemented yet.
+**Important Note:** This boilerplate does not yet support generating static sites for dynamic routes such as `post/:id`. That's the next major feature addition (see the [Roadmap below](#roadmap)) but it hasn't been implemented yet.
 
 For more info see [this issue on the react-static-webpack-plugin repo](https://github.com/iansinnott/react-static-webpack-plugin/issues/2).
 
@@ -152,9 +186,33 @@ For further reading on the primary tech used in this boilerplate see the links b
 
 ## Redux
 
-Interested in using Redux? Check out [this pull request](https://github.com/iansinnott/react-static-boilerplate/pull/9) and if you have issues feel free to open a [new Issue][]
+Redux is supported. Just be sure to tell the plugin where to find your store so that it can be passed through a `<Provider>` during the static rendering. You can configure this in `apptime.config.prod.js` using the `ReactStaticPlugin` configuration function:
 
-[new Issue]: https://github.com/iansinnott/react-static-boilerplate/issues/new
+```js
+// apptime.config.prod.js
+module.exports = (config, apptime) => ({
+  ...config, // Base config
+
+  ...apptime.ReactStaticPlugin({
+    routes: './client/routes.js',
+    reduxStore: './client/redux/store.js', // Add redux store
+    template: './template.js',
+  }),
+});
+```
+
+```js
+// ./client/store.js
+import { createStore } from 'redux';
+
+import someReducer from '../reducers';
+
+const store = createStore(someReducer);
+
+export default store;
+```
+
+👉 [Go here for a full working Redux example.](https://github.com/iansinnott/react-static-webpack-plugin/blob/master/example/redux/webpack.config.prod.js#L45)
 
 ## Troubleshooting
 
@@ -167,7 +225,7 @@ Interested in using Redux? Check out [this pull request](https://github.com/ians
 The `font-awesome-webpack` module does not seem to work with the approach of generating files as UMD modules then requiring them from the public dir. It throws an error about window not being defined.
 
 [React]: http://facebook.github.io/react/
-[Webpack]: http://webpack.github.io/
+[Webpack]: https://webpack.js.org/
 [Babel]: https://babeljs.io/
 [Stylus]: https://learnboost.github.io/stylus/
 [CSS Modules]: https://github.com/css-modules/css-modules
@@ -178,4 +236,3 @@ The `font-awesome-webpack` module does not seem to work with the approach of gen
 [React Router]: https://github.com/rackt/react-router
 [Redux]: https://github.com/rackt/redux
 [Docker Compose]: https://docs.docker.com/compose/
-
