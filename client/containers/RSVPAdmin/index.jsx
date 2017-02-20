@@ -2,10 +2,10 @@ import React from 'react'
 import {Link} from 'react-router'
 import update from 'immutability-helper'
 
-import RSVPAdminFilterBar from '../RSVPAdminFilterBar'
-import RSVPAdminSpinner from '../RSVPAdminSpinner'
-import RSVPAdminStats from '../RSVPAdminStats'
-import RSVPAdminTable from '../RSVPAdminTable'
+import RSVPAdminFilterBar from '../../components/RSVPAdminFilterBar'
+import Spinner from '../../components/Spinner'
+import RSVPAdminStats from '../../components/RSVPAdminStats'
+import RSVPAdminTable from '../../components/RSVPAdminTable'
 
 export default class RSVPAdmin extends React.Component {
 	constructor(props, context) {
@@ -171,7 +171,7 @@ export default class RSVPAdmin extends React.Component {
 		const filteredPeople = this.sort(this.filter(this.state.people, this.state.nameFilter, this.state.dietFilter, this.state.statusFilter), this.state.parties, this.state.sortField, this.state.sortDir)
 		return (
 			<div>
-				<RSVPAdminSpinner active={this.state.loading} />
+				<Spinner active={this.state.loading} />
 				<RSVPAdminStats coming={this.filter(this.state.people, '', '', 'yes').length} notComing={this.filter(this.state.people, '', '', 'no').length} noResponse={this.filter(this.state.people, '', '', '?').length} />
 				<RSVPAdminFilterBar count={filteredPeople.length} onDietChange={this.changeDiet} onStatusChange={this.changeStatus} onNameChange={this.changeName} onClearFilters={this.clearFilters} dietValue={this.state.dietFilter} nameValue={this.state.nameFilter} statusValue={this.state.statusFilter} />
 				<RSVPAdminTable people={filteredPeople} parties={this.state.parties} sortField={this.state.sortField} sortDir={this.state.sortDir} sortHandler={this.changeSort} />
