@@ -55,15 +55,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      options: {
-        postcss: [autoprefixer({ browsers: ['last 2 versions'] })],
-        stylus: {
-          use: [rupture(), instyll()],
-        },
-      },
-    }),
     new ExtractTextPlugin({
       filename: '[name].[contenthash:8].css',
       allChunks: true,
@@ -145,7 +136,7 @@ module.exports = {
 						query: {
 							modules: true,
 							importLoaders: 2,
-							localIdentName: '[name]__[local]__[hash:base64:6]',
+							localIdentName: '[path][name]__[local]___[hash:base64:5]',
 						},
 					},
           ],

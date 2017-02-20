@@ -48,14 +48,6 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        postcss: [autoprefixer({ browsers: ['last 2 versions'] })],
-        stylus: {
-          use: [rupture(), instyll()],
-        },
-      },
-    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
@@ -126,7 +118,7 @@ module.exports = {
 						query: {
 							modules: true,
 							importLoaders: 2,
-							localIdentName: '[name]__[local]__[hash:base64:6]',
+							localIdentName: '[path][name]__[local]___[hash:base64:5]',
 						},
 					},
         ],
