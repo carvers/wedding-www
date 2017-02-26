@@ -1,3 +1,5 @@
+const url = 'http://api.wedding.carvers.house:8080'
+
 // party loading
 export const REQUEST_PARTIES = 'REQUEST_PARTIES'
 export const RECEIVE_PARTIES = 'RECEIVE_PARTIEs'
@@ -5,6 +7,10 @@ export const RECEIVE_PARTIES = 'RECEIVE_PARTIEs'
 // people loading
 export const REQUEST_PEOPLE = 'REQUEST_PEOPLE'
 export const RECEIVE_PEOPLE = 'RECEIVE_PEOPLE'
+
+// people by party loading
+export const REQUEST_PEOPLE_BY_PARTY = 'REQUEST_PEOPLE_BY_PARTY'
+export const RECEIVE_PEOPLE_BY_PARTY = 'RECEIVE_PEOPLE_BY_PARTY'
 
 // party by codeWord loading
 export const REQUEST_PARTY_BY_CODE_WORD = 'REQUEST_PARTY_BY_CODE_WORD'
@@ -57,7 +63,7 @@ export const receiveParties = (parties, json) => ({
 
 const fetchParties = parties => dispatch => {
   dispatch(requestParties(parties))
-	return fetch(`http://api.wedding.carvers.house/parties?party_id=`+parties.join('&party_id='))
+	return fetch(url+`/parties?party_id=`+parties.join('&party_id='))
     .then(response => response.json())
     .then(json => dispatch(receiveParties(parties, json)))
 }
@@ -96,16 +102,19 @@ export const requestPartyByCodeWord = word => ({
   word,
 })
 
-export const receivePartyByCodeWord = (word, json) => ({
-  type: RECEIVE_PARTY_BY_CODE_WORD,
-	word,
-  info: json.data.children.map(child => child.data),
-  receivedAt: Date.now()
-})
+export const receivePartyByCodeWord = (word, json) => {
+	console.log(json)
+	return {
+		type: RECEIVE_PARTY_BY_CODE_WORD,
+		word,
+		party: json.parties[0],
+		receivedAt: Date.now()
+	}
+}
 
 const fetchPartyByCodeWord = word => dispatch => {
   dispatch(requestPartyByCodeWord(word))
-	return fetch(`http://api.wedding.carvers.house/parties?code_word=`+word)
+	return fetch(url+`/parties?magic_word=`+word)
     .then(response => response.json())
     .then(json => dispatch(receivePartyByCodeWord(word, json)))
 }
@@ -133,16 +142,21 @@ export const requestPeople = people => ({
   people,
 })
 
-export const receivePeople = (people, json) => ({
-  type: RECEIVE_PEOPLE,
-	people,
-  info: json.data.children.map(child => child.data),
-  receivedAt: Date.now()
-})
+export const receivePeople = (peopleIDs, json) => {
+	let people = {}
+	json.people.forEach(person => {
+		people[person.ID] = person
+	})
+	return {
+		type: RECEIVE_PEOPLE,
+		people,
+		receivedAt: Date.now()
+	}
+}
 
 const fetchPeople = people => dispatch => {
   dispatch(requestPeople(people))
-	return fetch(`http://api.wedding.carvers.house/people?person_id=`+people.join('&person_id='))
+	return fetch(url+`/people?person_id=`+people.join('&person_id='))
     .then(response => response.json())
     .then(json => dispatch(receivePeople(people, json)))
 }
@@ -173,4 +187,36 @@ export const fetchPeopleIfNeeded = people => (dispatch, getState) => {
 	if (toFetch) {
 		return dispatch(fetchPeople(toFetch))
   }
+}
+
+// Async fetch people by party
+export const requestPeopleByParty = (party, codeWord) => ({
+  type: REQUEST_PEOPLE_BY_PARTY,
+	party,
+	codeWord,
+})
+
+export const receivePeopleByParty = (party, json) => {
+	let people = {}
+	json.people.forEach(person => {
+		people[person.ID] = person
+	})
+	return {
+		type: RECEIVE_PEOPLE_BY_PARTY,
+		party,
+		people,
+		receivedAt: Date.now()
+	}
+}
+
+const fetchPeopleByParty = (party, codeWord) => dispatch => {
+  dispatch(requestPeopleByParty(party, codeWord))
+	return fetch(url+`/people?party_id=`+party)
+    .then(response => response.json())
+    .then(json => dispatch(receivePeopleByParty(party, json)))
+}
+
+export const fetchPeopleByPartyIfNeeded = (party, codeWord) => (dispatch, getState) => {
+	// TODO(paddy): cache this
+	return dispatch(fetchPeopleByParty(party, codeWord))
 }

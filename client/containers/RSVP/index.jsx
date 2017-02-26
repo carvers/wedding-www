@@ -4,33 +4,31 @@ import { connect } from 'react-redux'
 
 import { fetchPartyByCodeWordIfNeeded } from '../../actions'
 
-//import RSVPAuth from '../../components/RSVPAuth'
+import RSVPAuth from '../../components/RSVPAuth'
+import RSVPParty from '../RSVPParty'
 
 class RSVP extends React.Component {
 	static propTypes = {
 		codeWord: React.PropTypes.string,
-		partyID: React.PropTypes.string,
+		party: React.PropTypes.object,
 		dispatch: React.PropTypes.func.isRequired,
 	}
 
-	fetchPartyByCodeWord(word) {
+	fetchPartyByCodeWord = (word) => {
 		const { dispatch } = this.props
-		dispatch(fetchPartyByCodeWordIfNeeded(codeWord))
+		dispatch(fetchPartyByCodeWordIfNeeded(word))
 	}
 
 	render() {
-		/*if (this.props.codeWord === null || this.props.codeWord.length < 1 || this.props.partyID === null || this.props.partyID.length < 1) {
+		if (this.props.codeWord === null || this.props.codeWord.length < 1) {
 			return (
-				<RSVPAuth codeWord={this.props.codeWord} onSubmit={this.fetchPartyByCodeWord(word)} />
+				<RSVPAuth codeWord={this.props.codeWord} dispatch={this.fetchPartyByCodeWord} />
 			)
-			} else {
+		} else {
 			return (
-				<RSVPParty party={this.props.partyID} />
+				<RSVPParty party={this.props.party} codeWord={this.props.codeWord} save={() => {}} />
 			)
-			}*/
-		return (
-			<div>{this.props.codeWord}</div>
-		)
+		}
 	}
 }
 
@@ -43,7 +41,7 @@ const mapStateToProps = state => {
 
   return {
 		codeWord,
-		partyID,
+		party: state.parties[partyID],
   }
 }
 

@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title'
 import { connect } from 'react-redux'
 
 import NavBar from '../../components/NavBar'
-//import Spinner from '../../components/Spinner'
+import Spinner from '../../components/Spinner'
 import styles from './styles.css'
 
 // Favicon link is in the template, this just makes webpack package it up for us
@@ -15,6 +15,7 @@ import './apple-touch-icon.png'
 class App extends React.Component {
   static propTypes = {
     children: PropTypes.any,
+		loading: PropTypes.object.isRequired,
   }
 
 	constructor(props, context) {
@@ -26,6 +27,7 @@ class App extends React.Component {
 			<DocumentTitle title='Paddy & Ethan Are Getting Married!'>
 				<div className={styles.sky +' '+styles.fullDiv}>
 					<NavBar />
+					<Spinner active={this.props.loading} />
 					{this.props.children}
 					<footer></footer>
 				</div>
@@ -35,7 +37,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-	return {}
+	return {loading: state.fetching}
 }
 
 export default connect(mapStateToProps)(App)

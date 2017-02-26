@@ -5,6 +5,7 @@ import { SET_FILTER_NAME, SET_FILTER_DIET, SET_FILTER_STATUS, CLEAR_FILTERS,
 				 REQUEST_PARTIES, RECEIVE_PARTIES,
 				 REQUEST_PEOPLE, RECEIVE_PEOPLE,
 				 REQUEST_PARTY_BY_CODE_WORD, RECEIVE_PARTY_BY_CODE_WORD,
+				 REQUEST_PEOPLE_BY_PARTY, RECEIVE_PEOPLE_BY_PARTY,
 } from '../actions'
 
 const initialState = {
@@ -31,7 +32,13 @@ const initialState = {
 function parties(state = initialState.parties, action) {
 	switch(action.type) {
 					case RECEIVE_PARTIES:
-									return Object.assign({}, state, {parties: action.parties})
+									fetchedParties = {}
+									action.parties.forEach(party => {
+										fetchedParties[party.ID] = party
+									})
+									return Object.assign({}, state, {parties: fetchedParties})
+					case RECEIVE_PARTY_BY_CODE_WORD:
+									return Object.assign({}, state, {[action.party.ID]: action.party})
 					default:
 									return state
 	}
@@ -40,7 +47,8 @@ function parties(state = initialState.parties, action) {
 function people(state = initialState.people, action) {
 	switch (action.type) {
 					case RECEIVE_PEOPLE:
-									return Object.assign({}, state, {people: action.people})
+					case RECEIVE_PEOPLE_BY_PARTY:
+									return Object.assign({}, state, action.people)
 					default:
 									return state
 	}
@@ -49,7 +57,16 @@ function people(state = initialState.people, action) {
 function codeWords(state = initialState.codeWords, action) {
 	switch (action.type) {
 					case RECEIVE_PARTY_BY_CODE_WORD:
-									return Object.assign({}, state, {codeWords: {[action.word]: {partyID: action.party.ID}}})
+									return Object.assign({}, state, {[action.word]: {partyID: action.party.ID}})
+					default:
+									return state
+	}
+}
+
+function codeWord(state = initialState.codeWord, action) {
+	switch (action.type) {
+					case RECEIVE_PARTY_BY_CODE_WORD:
+									return action.word
 					default:
 									return state
 	}
@@ -59,15 +76,15 @@ function fetching(state = initialState.fetching, action) {
 	switch (action.type) {
 					case REQUEST_PEOPLE:
 									fetchingPeople = {}
-									action.people.forEach(person => {
+									for(person in action.paeople) {
 										fetchingPeople[person] = true
-									})
+									}
 									return Object.assign({}, state, {people: fetchingPeople})
 					case RECEIVE_PEOPLE:
 									fetchingPeople = {}
-									action.people.forEach(person => {
+									for(person in action.paeople) {
 										fetchingPeople[person] = false 
-									})
+									}
 									return Object.assign({}, state, {people: fetchingPeople})
 					case REQUEST_PARTIES:
 									parties = {}
@@ -85,6 +102,10 @@ function fetching(state = initialState.fetching, action) {
 									return Object.assign({}, state, {codeWords: {[action.word]: true}})
 					case RECEIVE_PARTY_BY_CODE_WORD:
 									return Object.assign({}, state, {codeWords: {[action.word]: false}})
+					case REQUEST_PEOPLE_BY_PARTY:
+									return Object.assign({}, state, {parties: {[action.party]: true}})
+					case RECEIVE_PEOPLE_BY_PARTY:
+									return Object.assign({}, state, {parties: {[action.party]: false}})
 					default:
 									return state
 	}
@@ -120,6 +141,7 @@ function sort(state = initialState.sort, action) {
 const weddingApp = combineReducers({
 	parties,
 	people,
+	codeWord,
 	codeWords,
 	fetching,
 	filters,

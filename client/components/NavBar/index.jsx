@@ -12,6 +12,7 @@ export default class NavBar extends React.Component {
 					<li><Link activeClassName={styles.activeLink} to="/about">Details</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/registry">Registry</Link></li>
+					<li><Link activeClassName={styles.activeLink} to="/rsvp">RSVP</Link></li>
 				</ul>
 				<Moon className={styles.moon} />
 				<ul className={styles.menu + ' ' + styles.underMoon}>
@@ -19,6 +20,7 @@ export default class NavBar extends React.Component {
 					<li><Link activeClassName={styles.activeLink} to="/about">Details</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
 					<li><Link activeClassName={styles.activeLink} to="/registry">Registry</Link></li>
+					<li><Link activeClassName={styles.activeLink} to="/rsvp">RSVP</Link></li>
 				</ul>
 				<div className={styles.clear} />
 			</nav>
