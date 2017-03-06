@@ -12,6 +12,7 @@ class RSVP extends React.Component {
 		codeWord: React.PropTypes.string,
 		party: React.PropTypes.object,
 		dispatch: React.PropTypes.func.isRequired,
+		errors: React.PropTypes.object,
 	}
 
 	fetchPartyByCodeWord = (word) => {
@@ -22,11 +23,11 @@ class RSVP extends React.Component {
 	render() {
 		if (this.props.codeWord === null || this.props.codeWord.length < 1) {
 			return (
-				<RSVPAuth codeWord={this.props.codeWord} dispatch={this.fetchPartyByCodeWord} />
+				<RSVPAuth codeWord={this.props.codeWord} dispatch={this.fetchPartyByCodeWord} errors={this.props.errors} />
 			)
 		} else {
 			return (
-				<RSVPParty party={this.props.party} codeWord={this.props.codeWord} onSubmit={data => console.log(data)} />
+				<RSVPParty party={this.props.party} codeWord={this.props.codeWord} onSubmit={data => console.log(data)} errors={this.props.errors} />
 			)
 		}
 	}
@@ -42,6 +43,7 @@ const mapStateToProps = state => {
   return {
 		codeWord,
 		party: state.rsvp.parties[partyID],
+		errors: state.rsvp.errors,
   }
 }
 

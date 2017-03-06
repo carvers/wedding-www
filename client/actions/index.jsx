@@ -15,9 +15,19 @@ export const RECEIVE_PEOPLE_BY_PARTY = 'RECEIVE_PEOPLE_BY_PARTY'
 // party by codeWord loading
 export const REQUEST_PARTY_BY_CODE_WORD = 'REQUEST_PARTY_BY_CODE_WORD'
 export const RECEIVE_PARTY_BY_CODE_WORD = 'RECEIVE_PARTY_BY_CODE_WORD'
+export const RECEIVE_NOT_FOUND_CODE_WORD = 'RECEIVE_NOT_FOUND_CODE_WORD'
 
 // set someone's +1
 export const SET_PLUS_ONE_NAME = 'SET_PLUS_ONE_NAME'
+
+// server error encountered
+export const RECEIVE_SERVER_ERROR = 'RECEIVE_SERVER_ERROR'
+export const receiveServerError = (details) => ({
+	type: RECEIVE_SERVER_ERROR,
+	word: details.word,
+	party: details.party,
+	people: details.people,
+})
 
 export const setPlusOne = (guestOfID, name) => ({
 	type: SET_PLUS_ONE_NAME,
@@ -120,11 +130,33 @@ export const receivePartyByCodeWord = (word, json) => {
 	}
 }
 
+export const receiveNotFoundCodeWord = (word, json) => {
+	return {
+		type: RECEIVE_NOT_FOUND_CODE_WORD,
+		word,
+		receivedAt: Date.now()
+	}
+}
+
 const fetchPartyByCodeWord = word => dispatch => {
   dispatch(requestPartyByCodeWord(word))
 	return fetch(url+`/parties?magic_word=`+word)
-    .then(response => response.json())
-    .then(json => dispatch(receivePartyByCodeWord(word, json)))
+		.then(response => {
+			if(response.headers.get('Content-Type') == 'application/json') {
+				return response.json().then(resp => ({data: resp, response: response}))
+			}
+			return response.text().then(resp => ({data: resp, response: response}))
+		})
+		.then(response => {
+			console.log(response)
+			if (response.response.ok) {
+				dispatch(receivePartyByCodeWord(word, response.data))
+			} else if (response.response.status == 404) {
+				dispatch(receiveNotFoundCodeWord(word))
+			} else {
+				dispatch(receiveServerError({word: word}))
+			}
+		})
 }
 
 const shouldFetchPartyByCodeWord = (state, word) => {
