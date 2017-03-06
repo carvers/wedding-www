@@ -1,9 +1,52 @@
+.people {
+	margin: 0;
+	padding: 0;
+}
+
+.person {
+	list-style: none;
+}
+
+.person input[type="text"], .person input[type="email"], .person textarea {
+	width: 95%;
+	display: block;
+	margin-top: .25em;
+	margin-bottom: 1em;
+	font-size: .75em;
+	background: transparent;
+	border: 0;
+	border-bottom: 1px white solid;
+	color: white;
+	padding: .5em;
+}
+
+.person input[type="text"]:focus, .person input[type="email"]:focus, .person textarea:focus {
+	outline: none;
+	border: 1px solid white;
+}
+
+.person textarea {
+	border-bottom: 0;
+	border: 1px white solid;
+	padding-top: .5em;
+	padding-bottom: .5em;
+}
+
+.person label {
+	display: block;
+}
+
+.attending {
+	text-align: center;
+}
+
 .attending label {
 	padding: 1em;
 	margin: 1em;
 	display: inline-block;
 	border-radius: .25em;
 	cursor: pointer;
+	border: 1px white solid;
 }
 
 .attending input {
@@ -11,28 +54,14 @@
 	position: absolute;
 }
 
-.attending input[value="no"] + label {
-	border: 1px #914f50 solid;
-	color: #914f50;
-}
-
 .attending input[value="no"]:checked + label {
 	background-color: #914f50;
 	color: white;
 }
 
-.attending input[value="yes"] + label {
-	border: 1px #869260 solid;
-	color: #869260;
-}
-
 .attending input[value="yes"]:checked + label {
 	background-color: #869260;
 	color: white;
-}
-
-.person {
-	list-style: none;
 }
 
 .activities ul {
@@ -41,11 +70,22 @@
 	padding: 0;
 }
 
-.activities li {
+.activities li, .activities input, .activities label {
 	display: inline-block;
 }
 
 .activities label {
 	margin-right: 1em;
 	margin-left: .5em;
+}
+
+.save {
+	padding: 1em 2em;
+	margin: 1em auto;
+	border: 1px white solid;
+	background: transparent;
+	color: white;
+	cursor: pointer;
+	border-radius: .25em;
+	display: block;
 }

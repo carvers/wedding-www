@@ -1,7 +1,7 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
+import { Field, formValueSelector, reduxForm } from 'redux-form'
 
 import styles from './styles.css'
 
@@ -17,14 +17,15 @@ class PersonDetails extends React.Component {
 
 	render() {
 		const {person, dispatch} = this.props
-		if (person.replied && !person.reply) {
+		console.log(person)
+		if (person.attendingChecked == 'no' || (person.replied && !person.reply)) {
 			return null
 		}
 		return (
 			<section>
-				<section>
+				<section className={styles.diet}>
 					<label htmlFor={person.ID+'-diet'}>Has the following dietary restrictions:</label>
-					<Field name={person.ID+'-diet'} id={person.ID+'-diet'} component='input' type='text' />
+					<Field name={person.ID+'-diet'} id={person.ID+'-diet'} component='textarea' type='text' />
 				</section>
 				<PlusOneInput guestOf={person} onChange={event => dispatch(setPlusOne(person.ID, event.target.value))} />
 				<section>
@@ -88,9 +89,9 @@ class RSVPParty extends React.Component {
 				<h3 className='subsection'>{person.name}</h3>
 				<section className={styles.attending}>
 					<Field name={person.ID+'-attending'} id={person.ID+'-attending'} component='input' type='radio' value='yes' />
-					<label htmlFor={person.ID+'-attending'}>Will Be Excited To Be There</label>
+					<label htmlFor={person.ID+'-attending'}>Will celebrate in person</label>
 					<Field name={person.ID+'-attending'} id={person.ID+'-not-attending'} component='input' type='radio' value='no' />
-					<label htmlFor={person.ID+'-not-attending'}>Is Sad To Be Missing It</label>
+					<label htmlFor={person.ID+'-not-attending'}>Will celebrate in spirit</label>
 				</section>
 				<PersonDetails person={person} dispatch={dispatch} />
 			</li>)
@@ -100,13 +101,12 @@ class RSVPParty extends React.Component {
 
 	render() {
 		const {handleSubmit, party, people} = this.props
-		console.log(people)
 		return (
 			<DocumentTitle title={'RSVP for '+party.name}>
 				<form onSubmit={handleSubmit} className='content' id='rsvp-form'>
 					<h2 className='title'>RSVP for {party.name}</h2>
-					<ul>{this.renderPeople(people)}</ul>
-					<input type='submit' value='Save' />
+					<ul className={styles.people}>{this.renderPeople(people)}</ul>
+					<input type='submit' className={styles.save} value='Save' />
 				</form>
 			</DocumentTitle>
 		)
@@ -121,7 +121,9 @@ const mapStateToProps = state => {
 		partyID = state.rsvp.codeWords[codeWord].partyID
 		for (const p in state.rsvp.people) {
 			if (state.rsvp.people[p].party == partyID) {
-				people[state.rsvp.people[p].ID] = state.rsvp.people[p]
+				let person = state.rsvp.people[p]
+				person.attendingChecked = selector(state, person.ID+'-attending')
+				people[person.ID] = person
 			}
 		}
 	}
@@ -134,4 +136,5 @@ const mapStateToProps = state => {
 }
 
 RSVPParty = reduxForm({form: 'rsvp-party', pure: false})(RSVPParty)
+const selector = formValueSelector('rsvp-party')
 export default connect(mapStateToProps)(RSVPParty)
