@@ -55,6 +55,7 @@ footer {
 
 button, input, textarea {
 	font-family: 'Josefin Sans', sans-serif;
+	outline: none;
 }
 
 :global(.title) {
