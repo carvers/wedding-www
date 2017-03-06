@@ -1,48 +1,112 @@
 import React from 'react'
 import DocumentTitle from 'react-document-title'
 import { connect } from 'react-redux'
+import { Field, reduxForm } from 'redux-form'
 
-import {fetchPeopleByPartyIfNeeded} from '../../actions'
+import styles from './styles.css'
+
+import {fetchPeopleByPartyIfNeeded, setPlusOne} from '../../actions'
+
+import PlusOneInput from '../../components/RSVPPartyPlusOne'
+
+class PersonDetails extends React.Component {
+	static propTypes = {
+		person: React.PropTypes.object.isRequired,
+		dispatch: React.PropTypes.func.isRequired,
+	}
+
+	render() {
+		const {person, dispatch} = this.props
+		if (person.replied && !person.reply) {
+			return null
+		}
+		return (
+			<section>
+				<section>
+					<label htmlFor={person.ID+'-diet'}>Has the following dietary restrictions:</label>
+					<Field name={person.ID+'-diet'} id={person.ID+'-diet'} component='input' type='text' />
+				</section>
+				<PlusOneInput guestOf={person} onChange={event => dispatch(setPlusOne(person.ID, event.target.value))} />
+				<section>
+					<label htmlFor={person.ID+'-song'}>Promises to dance if you play:</label>
+					<Field name={person.ID+'-song'} id={person.ID+'-song'} component='input' type='text' />
+				</section>
+				<section>
+					<label htmlFor={person.ID+'-email'}>Can be emailed at (optional):</label>
+					<Field name={person.ID+'-email'} id={person.ID+'-email'} component='input' type='email' />
+				</section>
+				<section className={styles.activities}>
+					<p>Would like to, while they&rsquo;re in the Tri-Cities&hellip;</p>
+					<ul>
+						<li>
+							<Field name={person.ID+'-hiking'} id={person.ID+'-hiking'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-hiking'}>Hike in the mountains</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-kayaking'} id={person.ID+'-kayaking'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-kayaking'}>Kayak in the Columbia River</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-pike-place'} id={person.ID+'-pike-place'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-pike-place'}>Visit the Pike Place Market in Seattle</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-fishing'} id={person.ID+'-fishing'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-fishing'}>Fish in the Columbia River</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-hanford'} id={person.ID+'-hanford'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-hanford'}>Tour the Hanford B-Reactor</label>
+						</li>
+					</ul>
+				</section>
+			</section>
+		)
+	}
+}
 
 class RSVPParty extends React.Component {
 	static propTypes = {
 		codeWord: React.PropTypes.string.isRequired,
 		partyID: React.PropTypes.string.isRequired,
 		people: React.PropTypes.object,
-		dispatch: React.PropTypes.func.isRequired,
+		handleSubmit: React.PropTypes.func.isRequired,
 	}
 
 	componentDidMount() {
+		window.scrollTo(0, 0)
 		const { dispatch, partyID, codeWord} = this.props
 		dispatch(fetchPeopleByPartyIfNeeded(partyID, codeWord))
 	}
 
-	componentWillReceiveProps(nextProps) {
-		if (nextProps.party.ID !== this.props.party.ID) {
-			const { dispatch, partyID, codeWord } = nextProps
-			dispatch(fetchPeopleByPartyIfNeeded(partyID, codeWord))
-		}
-	}
-
 	renderPeople(people) {
+		const { dispatch } = this.props
 		let output = []
 		for (const p in people) {
 			const person = people[p]
-			output.push(<li key={p}>{person.name}</li>)
+			output.push(<li key={p} className={styles.person}>
+				<h3 className='subsection'>{person.name}</h3>
+				<section className={styles.attending}>
+					<Field name={person.ID+'-attending'} id={person.ID+'-attending'} component='input' type='radio' value='yes' />
+					<label htmlFor={person.ID+'-attending'}>Will Be Excited To Be There</label>
+					<Field name={person.ID+'-attending'} id={person.ID+'-not-attending'} component='input' type='radio' value='no' />
+					<label htmlFor={person.ID+'-not-attending'}>Is Sad To Be Missing It</label>
+				</section>
+				<PersonDetails person={person} dispatch={dispatch} />
+			</li>)
 		}
 		return output
 	}
 
-	process = (e) => {
-		e.preventDefault()
-	}
-
 	render() {
+		const {handleSubmit, party, people} = this.props
+		console.log(people)
 		return (
-			<DocumentTitle title={'RSVP for '+this.props.party.name}>
-				<form onSubmit={this.process}>
-					<h2 className='title'>RSVP for {this.props.party.name}</h2>
-					<ul>{this.renderPeople(this.props.people)}</ul>
+			<DocumentTitle title={'RSVP for '+party.name}>
+				<form onSubmit={handleSubmit} className='content' id='rsvp-form'>
+					<h2 className='title'>RSVP for {party.name}</h2>
+					<ul>{this.renderPeople(people)}</ul>
+					<input type='submit' value='Save' />
 				</form>
 			</DocumentTitle>
 		)
@@ -50,15 +114,14 @@ class RSVPParty extends React.Component {
 }
 
 const mapStateToProps = state => {
-	const codeWord = state.codeWord
+	const codeWord = state.rsvp.codeWord
 	let partyID = ''
 	let people = {}
-	if (codeWord && state.codeWords[codeWord]) {
-		partyID = state.codeWords[codeWord].partyID
-		for (const p in state.people) {
-			console.log(state.people[p].party, partyID)
-			if (state.people[p].party == partyID) {
-				people[state.people[p].ID] = state.people[p]
+	if (codeWord && state.rsvp.codeWords[codeWord]) {
+		partyID = state.rsvp.codeWords[codeWord].partyID
+		for (const p in state.rsvp.people) {
+			if (state.rsvp.people[p].party == partyID) {
+				people[state.rsvp.people[p].ID] = state.rsvp.people[p]
 			}
 		}
 	}
@@ -70,4 +133,5 @@ const mapStateToProps = state => {
 	}
 }
 
+RSVPParty = reduxForm({form: 'rsvp-party', pure: false})(RSVPParty)
 export default connect(mapStateToProps)(RSVPParty)

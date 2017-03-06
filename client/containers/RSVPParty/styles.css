@@ -1,0 +1,51 @@
+.attending label {
+	padding: 1em;
+	margin: 1em;
+	display: inline-block;
+	border-radius: .25em;
+	cursor: pointer;
+}
+
+.attending input {
+	left: -200%;
+	position: absolute;
+}
+
+.attending input[value="no"] + label {
+	border: 1px #914f50 solid;
+	color: #914f50;
+}
+
+.attending input[value="no"]:checked + label {
+	background-color: #914f50;
+	color: white;
+}
+
+.attending input[value="yes"] + label {
+	border: 1px #869260 solid;
+	color: #869260;
+}
+
+.attending input[value="yes"]:checked + label {
+	background-color: #869260;
+	color: white;
+}
+
+.person {
+	list-style: none;
+}
+
+.activities ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.activities li {
+	display: inline-block;
+}
+
+.activities label {
+	margin-right: 1em;
+	margin-left: .5em;
+}

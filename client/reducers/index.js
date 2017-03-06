@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux'
+import UUID from 'pure-uuid'
 
 import { SET_FILTER_NAME, SET_FILTER_DIET, SET_FILTER_STATUS, CLEAR_FILTERS,
 	       SET_SORT_FIELD, CHANGE_SORT_DIR,
-				 REQUEST_PARTIES, RECEIVE_PARTIES,
+				 REQUEST_PARTIES, RECEIVE_PARTIES, SET_PLUS_ONE_NAME,
 				 REQUEST_PEOPLE, RECEIVE_PEOPLE,
 				 REQUEST_PARTY_BY_CODE_WORD, RECEIVE_PARTY_BY_CODE_WORD,
 				 REQUEST_PEOPLE_BY_PARTY, RECEIVE_PEOPLE_BY_PARTY,
@@ -49,6 +50,34 @@ function people(state = initialState.people, action) {
 					case RECEIVE_PEOPLE:
 					case RECEIVE_PEOPLE_BY_PARTY:
 									return Object.assign({}, state, action.people)
+					case SET_PLUS_ONE_NAME:
+									let plusOne = {}
+									const guestOf = state[action.guestOfID]
+									if (guestOf.plusOne) {
+										plusOne = state[guestOf.plusOne]
+									}
+									if (!plusOne.ID) {
+										plusOne = {
+											ID: new UUID(4).format(),
+											party: guestOf.party,
+											getsPlusOne: false,
+											isPlusOne: true,
+											isPlusOneOf: guestOf.ID,
+											replied: false,
+											reply: false,
+											isChild: false,
+										}
+									}
+									guestOf.plusOne = plusOne.ID
+									if (action.name.length < 1) {
+										delete guestOf['plusOne']
+									}
+									plusOne.name = action.name
+									let ret =  Object.assign({}, state, {[plusOne.ID]: plusOne, [guestOf.ID]: guestOf})
+									if (action.name.length < 1) {
+										delete(ret[plusOne.ID])
+									}
+									return ret
 					default:
 									return state
 	}

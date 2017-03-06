@@ -15,8 +15,8 @@ export default class RSVPAuth extends React.Component {
 	render() {
 		return (
 			<DocumentTitle title='About the Wedding'>
-				<form onSubmit={this.process}>
-					<h1>Enter Your Code Word</h1>
+				<form className='content' onSubmit={this.process}>
+					<h1 className='title'>Enter Your Code Word</h1>
 					<div className='input-container'>
 						<input type='text' name='codeWord' />
 						<button>Next</button>

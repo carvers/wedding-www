@@ -8,19 +8,19 @@ export default class NavBar extends React.Component {
 		return (
 			<nav className={styles.bar}>
 				<ul className={styles.menu + ' ' + styles.overMoon}>
-					<li><IndexLink activeClassName={styles.activeLink} to="/">Home</IndexLink></li>
-					<li><Link activeClassName={styles.activeLink} to="/about">Details</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/registry">Registry</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/rsvp">RSVP</Link></li>
+					<li><IndexLink activeClassName={styles.activeLink} tabIndex='-1' to="/">Home</IndexLink></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/about">Details</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/travel">Travel</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/registry">Registry</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/rsvp">RSVP</Link></li>
 				</ul>
 				<Moon className={styles.moon} />
 				<ul className={styles.menu + ' ' + styles.underMoon}>
-					<li><IndexLink activeClassName={styles.activeLink} to="/">Home</IndexLink></li>
-					<li><Link activeClassName={styles.activeLink} to="/about">Details</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/travel">Travel</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/registry">Registry</Link></li>
-					<li><Link activeClassName={styles.activeLink} to="/rsvp">RSVP</Link></li>
+					<li><IndexLink activeClassName={styles.activeLink} tabIndex='-1' to="/">Home</IndexLink></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/about">Details</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/travel">Travel</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/registry">Registry</Link></li>
+					<li><Link activeClassName={styles.activeLink} tabIndex='-1' to="/rsvp">RSVP</Link></li>
 				</ul>
 				<div className={styles.clear} />
 			</nav>

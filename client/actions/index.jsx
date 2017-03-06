@@ -1,4 +1,4 @@
-const url = 'http://api.wedding.carvers.house:8080'
+const url = 'http://192.168.86.123:8080'
 
 // party loading
 export const REQUEST_PARTIES = 'REQUEST_PARTIES'
@@ -15,6 +15,15 @@ export const RECEIVE_PEOPLE_BY_PARTY = 'RECEIVE_PEOPLE_BY_PARTY'
 // party by codeWord loading
 export const REQUEST_PARTY_BY_CODE_WORD = 'REQUEST_PARTY_BY_CODE_WORD'
 export const RECEIVE_PARTY_BY_CODE_WORD = 'RECEIVE_PARTY_BY_CODE_WORD'
+
+// set someone's +1
+export const SET_PLUS_ONE_NAME = 'SET_PLUS_ONE_NAME'
+
+export const setPlusOne = (guestOfID, name) => ({
+	type: SET_PLUS_ONE_NAME,
+	guestOfID,
+	name
+})
 
 // filter adjusting
 export const SET_FILTER_NAME = 'SET_FILTER_NAME'
@@ -69,10 +78,10 @@ const fetchParties = parties => dispatch => {
 }
 
 const shouldFetchParty = (state, party) => {
-  if (state.fetching.parties[party]) {
+  if (state.rsvp.fetching.parties[party]) {
     return false
   }
-  const info = state.parties[party]
+  const info = state.rsvp.parties[party]
   if (!info) {
     return true
   }
@@ -103,7 +112,6 @@ export const requestPartyByCodeWord = word => ({
 })
 
 export const receivePartyByCodeWord = (word, json) => {
-	console.log(json)
 	return {
 		type: RECEIVE_PARTY_BY_CODE_WORD,
 		word,
@@ -120,10 +128,10 @@ const fetchPartyByCodeWord = word => dispatch => {
 }
 
 const shouldFetchPartyByCodeWord = (state, word) => {
-	if (state.fetching.codeWords[word]) {
+	if (state.rsvp.fetching.codeWords[word]) {
 		return false
 	}
-  const partyID = state.codeWords[word]
+  const partyID = state.rsvp.codeWords[word]
   if (!partyID) {
     return true
 	}
@@ -162,10 +170,10 @@ const fetchPeople = people => dispatch => {
 }
 
 const shouldFetchPerson = (state, person) => {
-	if (state.fetching.people[person]) {
+	if (state.rsvp.fetching.people[person]) {
 		return false
 	}
-  const info = state.person[person]
+  const info = state.rsvp.person[person]
   if (!info) {
     return true
   }

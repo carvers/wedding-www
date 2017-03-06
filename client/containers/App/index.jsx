@@ -37,7 +37,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-	return {loading: state.fetching}
+	return {loading: state.rsvp.fetching}
 }
 
 export default connect(mapStateToProps)(App)

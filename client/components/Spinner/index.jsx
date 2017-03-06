@@ -5,7 +5,6 @@ export default class RSVPAdminSpinner extends React.Component {
 	isLoading(loading) {
 		for (const s in loading) {
 			for (const i in loading[s]) {
-				console.log(s, i, loading[s][i])
 				if (loading[s][i]) {
 					return true
 				}

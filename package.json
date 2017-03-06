@@ -32,6 +32,7 @@
     "history": "^4.5.0",
     "immutability-helper": "^2.1.1",
     "normalize.css": "^5.0.0",
+    "pure-uuid": "^1.4.4",
     "react": "^15.1.0",
     "react-chartjs": "git://github.com/venari/react-chartjs.git#chartjs-v2",
     "react-document-title": "^2.0.2",
@@ -39,6 +40,7 @@
     "react-redux": "^5.0.2",
     "react-router": "^3.0.0",
     "redux": "^3.6.0",
+    "redux-form": "^6.5.0",
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0"
   },

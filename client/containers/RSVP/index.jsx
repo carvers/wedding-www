@@ -26,22 +26,22 @@ class RSVP extends React.Component {
 			)
 		} else {
 			return (
-				<RSVPParty party={this.props.party} codeWord={this.props.codeWord} save={() => {}} />
+				<RSVPParty party={this.props.party} codeWord={this.props.codeWord} onSubmit={data => console.log(data)} />
 			)
 		}
 	}
 }
 
 const mapStateToProps = state => {
-	const codeWord = state.codeWord
+	const codeWord = state.rsvp.codeWord
 	let partyID = ''
-	if (codeWord && state.codeWords[codeWord]) {
-		partyID = state.codeWords[codeWord].partyID
+	if (codeWord && state.rsvp.codeWords[codeWord]) {
+		partyID = state.rsvp.codeWords[codeWord].partyID
 	}
 
   return {
 		codeWord,
-		party: state.parties[partyID],
+		party: state.rsvp.parties[partyID],
   }
 }
 
