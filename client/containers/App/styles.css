@@ -53,6 +53,10 @@ footer {
 	padding-bottom: 5em;
 }
 
+button, input {
+	font-family: 'Josefin Sans', sans-serif;
+}
+
 :global(.title) {
 	font-family: 'Palanquin', sans-serif;
 	font-size: 2.5rem;
