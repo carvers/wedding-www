@@ -38,7 +38,9 @@ export default class RSVPAuth extends React.Component {
 					<h1 className='title'>Enter Your Code Word</h1>
 					<div className={styles.inputContainer}>
 						<input type='text' autoComplete='off' name='codeWord' />
-						<Error error={this.errorIsNotFound(this.props.errors)} className={styles.error} message='That looks like the wrong code word. Try again?' />
+						<Error error={this.errorIsNotFound(this.props.errors)}>
+							<p className={styles.error}>That looks like the wrong code word. Try again?</p>
+						</Error>
 						<button>Next</button>
 					</div>
 				</form>
