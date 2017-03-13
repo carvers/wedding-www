@@ -33,7 +33,7 @@ export default class RSVPAuth extends React.Component {
 
 	render() {
 		return (
-			<DocumentTitle title='About the Wedding'>
+			<DocumentTitle title='RSVP'>
 				<form className='content' onSubmit={this.process}>
 					<h1 className='title'>Enter Your Code Word</h1>
 					<div className={styles.inputContainer}>
