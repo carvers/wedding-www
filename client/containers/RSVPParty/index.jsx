@@ -59,6 +59,14 @@ class PersonDetails extends React.Component {
 							<Field name={person.ID+'-hanford'} id={person.ID+'-hanford'} component='input' type='checkbox' />
 							<label htmlFor={person.ID+'-hanford'}>Tour the Hanford B-Reactor</label>
 						</li>
+						<li>
+							<Field name={person.ID+'-ligo'} id={person.ID+'-ligo'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-hanford'}>Tour the LIGO Research Facility</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-powells'} id={person.ID+'-powells'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-hanford'}>Visit Powell’s Books in Portland</label>
+						</li>
 					</ul>
 				</section>
 			</section>
