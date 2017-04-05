@@ -30,7 +30,7 @@ export default class RSVPAdmin extends React.Component {
 
 	loadPeople() {
 		this.setState({'loading': update(this.state.loading, {$merge: {people: true}})})
-		fetch('http://api.wedding.carvers.house/people')
+		fetch('http://192.168.86.123:4004/people')
 			.then((response) => {
 				return response.json()
 			})
@@ -45,7 +45,7 @@ export default class RSVPAdmin extends React.Component {
 
 	loadParties() {
 		this.setState({'loading': update(this.state.loading, {$merge: {parties: true}})})
-		fetch('http://api.wedding.carvers.house/parties')
+		fetch('http://192.168.86.123:4004/parties')
 			.then((response) => {
 				return response.json()
 			})

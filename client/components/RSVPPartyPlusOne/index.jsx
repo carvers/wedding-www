@@ -3,7 +3,7 @@ import {Field} from 'redux-form'
 
 export default class PlusOneInput extends React.Component {
 	static propTypes = {
-		guestOf: React.PropTypes.object.isRequred,
+		guestOf: React.PropTypes.object.isRequired,
 		onChange: React.PropTypes.func.isRequired,
 	}
 

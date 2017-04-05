@@ -48,8 +48,8 @@ class PersonDetails extends React.Component {
 							<label htmlFor={person.ID+'-kayaking'}>Kayak in the Columbia River</label>
 						</li>
 						<li>
-							<Field name={person.ID+'-pike-place'} id={person.ID+'-pike-place'} component='input' type='checkbox' />
-							<label htmlFor={person.ID+'-pike-place'}>Visit the Pike Place Market in Seattle</label>
+							<Field name={person.ID+'-jetski'} id={person.ID+'-jetski'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-jetski'}>Jet Ski in the Columbia Rivier</label>
 						</li>
 						<li>
 							<Field name={person.ID+'-fishing'} id={person.ID+'-fishing'} component='input' type='checkbox' />
@@ -61,11 +61,23 @@ class PersonDetails extends React.Component {
 						</li>
 						<li>
 							<Field name={person.ID+'-ligo'} id={person.ID+'-ligo'} component='input' type='checkbox' />
-							<label htmlFor={person.ID+'-hanford'}>Tour the LIGO Research Facility</label>
+							<label htmlFor={person.ID+'-ligo'}>Tour the LIGO Research Facility</label>
 						</li>
 						<li>
-							<Field name={person.ID+'-powells'} id={person.ID+'-powells'} component='input' type='checkbox' />
-							<label htmlFor={person.ID+'-hanford'}>Visit Powell’s Books in Portland</label>
+							<Field name={person.ID+'-reach'} id={person.ID+'-reach'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-reach'}>Visit the REACH Museum</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-bechtel'} id={person.ID+'-bechtel'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-bechtel'}>Visit the Bechtel Planetarium</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-wine'} id={person.ID+'-wine'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-wine'}>Take a wine tour of the region</label>
+						</li>
+						<li>
+							<Field name={person.ID+'-escape-room'} id={person.ID+'-escape-room'} component='input' type='checkbox' />
+							<label htmlFor={person.ID+'-escape-room'}>Try to escape from our puzzle room</label>
 						</li>
 					</ul>
 				</section>
@@ -111,7 +123,7 @@ class RSVPParty extends React.Component {
 		const {handleSubmit, party, people} = this.props
 		return (
 			<DocumentTitle title={'RSVP for '+party.name}>
-				<form onSubmit={handleSubmit} className='content' id='rsvp-form'>
+				<form onSubmit={handleSubmit} className='content' id='rsvp-form'> 
 					<h2 className='title'>RSVP for {party.name}</h2>
 					<ul className={styles.people}>{this.renderPeople(people)}</ul>
 					<input type='submit' className={styles.save} value='Save' />
@@ -125,6 +137,7 @@ const mapStateToProps = state => {
 	const codeWord = state.rsvp.codeWord
 	let partyID = ''
 	let people = {}
+	let initialValues = {}
 	if (codeWord && state.rsvp.codeWords[codeWord]) {
 		partyID = state.rsvp.codeWords[codeWord].partyID
 		for (const p in state.rsvp.people) {
@@ -132,6 +145,22 @@ const mapStateToProps = state => {
 				let person = state.rsvp.people[p]
 				person.attendingChecked = selector(state, person.ID+'-attending')
 				people[person.ID] = person
+				if (person.replied) {
+					initialValues[person.ID+'-attending'] = person.reply ? 'yes' : 'no'
+				}
+				initialValues[person.ID+'-diet'] = person.dietaryRestrictions
+				initialValues[person.ID+'-song'] = person.songRequest
+				initialValues[person.ID+'-hiking'] = person.hiking
+				initialValues[person.ID+'-email'] = person.email
+				initialValues[person.ID+'-kayaking'] = person.kayaking
+				initialValues[person.ID+'-jetski'] = person.jetski
+				initialValues[person.ID+'-fishing'] = person.fishing
+				initialValues[person.ID+'-hanford'] = person.hanford
+				initialValues[person.ID+'-ligo'] = person.ligo
+				initialValues[person.ID+'-reach'] = person.reach
+				initialValues[person.ID+'-bechtel'] = person.bechtel
+				initialValues[person.ID+'-wine'] = person.wine
+				initialValues[person.ID+'-escape-room'] = person.escapeRoom
 			}
 		}
 	}
@@ -140,6 +169,9 @@ const mapStateToProps = state => {
 		codeWord,
 		partyID,
 		people,
+		initialValues: initialValues,
+		enableReinitialize: true,
+		keepDirtyOnReinitialize: true,
 	}
 }
 

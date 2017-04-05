@@ -5,6 +5,7 @@ import { SET_FILTER_NAME, SET_FILTER_DIET, SET_FILTER_STATUS, CLEAR_FILTERS,
 	       SET_SORT_FIELD, CHANGE_SORT_DIR,
 				 REQUEST_PARTIES, RECEIVE_PARTIES, SET_PLUS_ONE_NAME,
 				 REQUEST_PEOPLE, RECEIVE_PEOPLE,
+				 REQUEST_PEOPLE_UPDATE, RECEIVE_PEOPLE_UPDATE,
 				 REQUEST_PARTY_BY_CODE_WORD, RECEIVE_PARTY_BY_CODE_WORD, RECEIVE_NOT_FOUND_CODE_WORD,
 				 REQUEST_PEOPLE_BY_PARTY, RECEIVE_PEOPLE_BY_PARTY,
 				 RECEIVE_SERVER_ERROR,
@@ -144,6 +145,18 @@ function fetching(state = initialState.fetching, action) {
 										parties[party] = false 
 									})
 									return Object.assign({}, state, {parties: parties})
+					case REQUEST_PEOPLE_UPDATE:
+									people = {}
+									action.people.forEach(person => {
+										people[person.ID] = true
+									})
+									return Object.assign({}, state, {people: people})
+					case RECEIVE_PEOPLE_UPDATE:
+									people = {}
+									action.people.forEach(person => {
+										people[person.ID] = false
+									})
+									return Object.assign({}, state, {people: people})
 					case REQUEST_PARTY_BY_CODE_WORD:
 									return Object.assign({}, state, {codeWords: {[action.word]: true}})
 					case RECEIVE_PARTY_BY_CODE_WORD:

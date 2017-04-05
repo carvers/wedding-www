@@ -1,8 +1,12 @@
-const url = 'http://192.168.86.123:8080'
+const url = 'http://192.168.86.123:4004'
 
 // party loading
 export const REQUEST_PARTIES = 'REQUEST_PARTIES'
 export const RECEIVE_PARTIES = 'RECEIVE_PARTIEs'
+
+// people saving
+export const REQUEST_PEOPLE_UPDATE = 'REQUEST_PEOPLE_UPDATE'
+export const RECEIVE_PEOPLE_UPDATE = 'RECEIVE_PEOPLE_UPDATE'
 
 // people loading
 export const REQUEST_PEOPLE = 'REQUEST_PEOPLE'
@@ -80,9 +84,25 @@ export const receiveParties = (parties, json) => ({
   receivedAt: Date.now()
 })
 
+// Async persist people
+export const requestPeopleUpdate = people => ({
+	type: REQUEST_PEOPLE_UPDATE,
+	people
+})
+
+export const receivePeopleUpdate = (people, json) => ({
+	type: RECEIVE_PEOPLE_UPDATE,
+	people,
+	info: json.data,
+	receivedAt: Date.now(),
+})
+
 const fetchParties = parties => dispatch => {
   dispatch(requestParties(parties))
-	return fetch(url+`/parties?party_id=`+parties.join('&party_id='))
+	return fetch(url+`/parties?party_id=`+parties.join('&party_id='), {
+		credentials: 'include',
+		mode: 'cors'
+	})
     .then(response => response.json())
     .then(json => dispatch(receiveParties(parties, json)))
 }
@@ -115,6 +135,30 @@ export const fetchPartiesIfNeeded = parties => (dispatch, getState) => {
   }
 }
 
+export const updatePeople = (people, codeWord) => (dispatch, getState) => {
+	dispatch(requestPeopleUpdate(people))
+	return fetch(url+'/people', {
+		method: "PUT",
+		headers: new Headers({'Code-Word': codeWord}),
+		body: JSON.stringify({people: people}),
+		credentials: 'include',
+		mode: 'cors'
+	})
+		.then(response => {
+			if(response.headers.get('Content-Type') == 'application/json') {
+				return response.json().then(resp => ({data: resp, response: response}))
+			}
+			return response.text().then(resp => ({data: resp, response: response}))
+		})
+		.then(response => {
+			if (response.response.ok) {
+				dispatch(receivePeopleUpdate(people, response.data))
+			} else {
+				console.log(response)
+			}
+		})
+}
+
 // Async fetch parties by codeWords
 export const requestPartyByCodeWord = word => ({
   type: REQUEST_PARTY_BY_CODE_WORD,
@@ -140,7 +184,10 @@ export const receiveNotFoundCodeWord = (word, json) => {
 
 const fetchPartyByCodeWord = word => dispatch => {
   dispatch(requestPartyByCodeWord(word))
-	return fetch(url+`/parties?magic_word=`+word)
+	return fetch(url+`/parties?magic_word=`+word, {headers: new Headers({
+		'Code-Word': word,
+	}), credentials: 'include',
+	mode: 'cors'})
 		.then(response => {
 			if(response.headers.get('Content-Type') == 'application/json') {
 				return response.json().then(resp => ({data: resp, response: response}))
@@ -148,7 +195,6 @@ const fetchPartyByCodeWord = word => dispatch => {
 			return response.text().then(resp => ({data: resp, response: response}))
 		})
 		.then(response => {
-			console.log(response)
 			if (response.response.ok) {
 				dispatch(receivePartyByCodeWord(word, response.data))
 			} else if (response.response.status == 404) {
@@ -196,7 +242,10 @@ export const receivePeople = (peopleIDs, json) => {
 
 const fetchPeople = people => dispatch => {
   dispatch(requestPeople(people))
-	return fetch(url+`/people?person_id=`+people.join('&person_id='))
+	return fetch(url+`/people?person_id=`+people.join('&person_id='), {
+		credentials: 'include',
+		mode: 'cors'}
+	)
     .then(response => response.json())
     .then(json => dispatch(receivePeople(people, json)))
 }
@@ -250,8 +299,12 @@ export const receivePeopleByParty = (party, json) => {
 }
 
 const fetchPeopleByParty = (party, codeWord) => dispatch => {
-  dispatch(requestPeopleByParty(party, codeWord))
-	return fetch(url+`/people?party_id=`+party)
+	dispatch(requestPeopleByParty(party, codeWord))
+	let headers = new Headers()
+	return fetch(url+`/people?party_id=`+party, {headers: new Headers({
+		'Code-Word': codeWord,
+	}), credentials: 'include',
+	mode: 'cors'})
     .then(response => response.json())
     .then(json => dispatch(receivePeopleByParty(party, json)))
 }
