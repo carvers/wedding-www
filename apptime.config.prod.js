@@ -29,6 +29,7 @@ module.exports = (config, apptime) => ({
     app: [
 			'normalize.css',
       apptime.polyfill,
+			'whatwg-fetch',
       './client/index.jsx',
     ],
   },

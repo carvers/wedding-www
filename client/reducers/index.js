@@ -114,6 +114,8 @@ function codeWord(state = initialState.codeWord, action) {
 	switch (action.type) {
 					case RECEIVE_PARTY_BY_CODE_WORD:
 									return action.word
+					case RECEIVE_PEOPLE_UPDATE:
+									return ''
 					default:
 									return state
 	}

@@ -1,16 +1,9 @@
-const url = 'http://192.168.86.123:4004'
-
-// party loading
-export const REQUEST_PARTIES = 'REQUEST_PARTIES'
-export const RECEIVE_PARTIES = 'RECEIVE_PARTIEs'
+const url = 'https://wedding.carvers.co/api'
+import { browserHistory } from 'react-router'
 
 // people saving
 export const REQUEST_PEOPLE_UPDATE = 'REQUEST_PEOPLE_UPDATE'
 export const RECEIVE_PEOPLE_UPDATE = 'RECEIVE_PEOPLE_UPDATE'
-
-// people loading
-export const REQUEST_PEOPLE = 'REQUEST_PEOPLE'
-export const RECEIVE_PEOPLE = 'RECEIVE_PEOPLE'
 
 // people by party loading
 export const REQUEST_PEOPLE_BY_PARTY = 'REQUEST_PEOPLE_BY_PARTY'
@@ -71,19 +64,6 @@ export const changeSortDir = () => ({
 	type: CHANGE_SORT_DIR,
 })
 
-// Async fetch parties
-export const requestParties = parties => ({
-  type: REQUEST_PARTY,
-  parties,
-})
-
-export const receiveParties = (parties, json) => ({
-  type: RECEIVE_PARTIES,
-	parties,
-  info: json.data.children.map(child => child.data),
-  receivedAt: Date.now()
-})
-
 // Async persist people
 export const requestPeopleUpdate = people => ({
 	type: REQUEST_PEOPLE_UPDATE,
@@ -96,44 +76,6 @@ export const receivePeopleUpdate = (people, json) => ({
 	info: json.data,
 	receivedAt: Date.now(),
 })
-
-const fetchParties = parties => dispatch => {
-  dispatch(requestParties(parties))
-	return fetch(url+`/parties?party_id=`+parties.join('&party_id='), {
-		credentials: 'include',
-		mode: 'cors'
-	})
-    .then(response => response.json())
-    .then(json => dispatch(receiveParties(parties, json)))
-}
-
-const shouldFetchParty = (state, party) => {
-  if (state.rsvp.fetching.parties[party]) {
-    return false
-  }
-  const info = state.rsvp.parties[party]
-  if (!info) {
-    return true
-  }
-  return info.didInvalidate
-}
-
-const partiesToFetch = (state, parties) => {
-	let toFetch = []
-	for (party in parties) {
-		if (shouldFetchParty(state, parties[party])) {
-			toFetch.push(parties[party])
-		}
-	}
-	return toFetch
-}
-
-export const fetchPartiesIfNeeded = parties => (dispatch, getState) => {
-	const toFetch = partiesToFetch(getState(), parties)
-	if (toFetch) {
-		return dispatch(fetchParties(toFetch))
-  }
-}
 
 export const updatePeople = (people, codeWord) => (dispatch, getState) => {
 	dispatch(requestPeopleUpdate(people))
@@ -153,6 +95,7 @@ export const updatePeople = (people, codeWord) => (dispatch, getState) => {
 		.then(response => {
 			if (response.response.ok) {
 				dispatch(receivePeopleUpdate(people, response.data))
+				browserHistory.push('/rsvp/confirm')
 			} else {
 				console.log(response)
 			}
@@ -219,62 +162,6 @@ const shouldFetchPartyByCodeWord = (state, word) => {
 export const fetchPartyByCodeWordIfNeeded = word => (dispatch, getState) => {
 	if (shouldFetchPartyByCodeWord(getState(), word)) {
 		return dispatch(fetchPartyByCodeWord(word))
-  }
-}
-
-// Async fetch people
-export const requestPeople = people => ({
-  type: REQUEST_PEOPLE,
-  people,
-})
-
-export const receivePeople = (peopleIDs, json) => {
-	let people = {}
-	json.people.forEach(person => {
-		people[person.ID] = person
-	})
-	return {
-		type: RECEIVE_PEOPLE,
-		people,
-		receivedAt: Date.now()
-	}
-}
-
-const fetchPeople = people => dispatch => {
-  dispatch(requestPeople(people))
-	return fetch(url+`/people?person_id=`+people.join('&person_id='), {
-		credentials: 'include',
-		mode: 'cors'}
-	)
-    .then(response => response.json())
-    .then(json => dispatch(receivePeople(people, json)))
-}
-
-const shouldFetchPerson = (state, person) => {
-	if (state.rsvp.fetching.people[person]) {
-		return false
-	}
-  const info = state.rsvp.person[person]
-  if (!info) {
-    return true
-  }
-  return info.didInvalidate
-}
-
-const peopleToFetch = (state, people) => {
-	let toFetch = []
-	for (person in people) {
-		if (shouldFetchPerson(state, people[person])) {
-			toFetch.push(people[person])
-		}
-	}
-	return toFetch
-}
-
-export const fetchPeopleIfNeeded = people => (dispatch, getState) => {
-	const toFetch = peopleToFetch(getState(), people)
-	if (toFetch) {
-		return dispatch(fetchPeople(toFetch))
   }
 }
 

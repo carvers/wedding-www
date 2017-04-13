@@ -9,6 +9,7 @@ import Travel from './components/Travel'
 import Registry from './components/Registry'
 import RSVP from './containers/RSVP'
 import RSVPAdmin from './containers/RSVPAdmin'
+import RSVPConfirmation from './components/RSVPConfirmation'
 
 export const routes = (
   <Route path='/' component={App}>
@@ -19,6 +20,7 @@ export const routes = (
     <Route path='rsvp'>
 			<IndexRoute component={RSVP} />
 			<Route path='admin' component={RSVPAdmin} />
+			<Route path='confirm' component={RSVPConfirmation} />
 		</Route>
     <Route path='*' component={NotFound} />
   </Route>
