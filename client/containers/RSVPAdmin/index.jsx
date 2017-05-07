@@ -31,7 +31,10 @@ class RSVPAdmin extends React.Component {
 		}
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(prevProps) {
+		if (prevProps.token === this.props.token) {
+			return
+		}
 		if (this.props.token !== null && this.props.token.length > 0) {
 			this.loadParties(this.props.token)
 			this.loadPeople(this.props.token)
