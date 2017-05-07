@@ -42,14 +42,14 @@ const initialState = {
 function parties(state = initialState.parties, action) {
 	switch(action.type) {
 					case RECEIVE_PARTIES:
-									fetchedParties = {}
+									let fetchedParties = Object.assign({}, state)
 									action.parties.forEach(party => {
 										if (party.notFound) {
 											return
 										}
 										fetchedParties[party.ID] = party
 									})
-									return Object.assign({}, state, {parties: fetchedParties})
+									return fetchedParties
 					case RECEIVE_PARTY_BY_CODE_WORD:
 									if (action.party.notFound) {
 										return state
@@ -63,6 +63,15 @@ function parties(state = initialState.parties, action) {
 function people(state = initialState.people, action) {
 	switch (action.type) {
 					case RECEIVE_PEOPLE:
+									let fetchedPeople = Object.assign({}, state)
+									console.log(action.people)
+									action.people.forEach(person => {
+										if (person.notFound) {
+											return
+										}
+										fetchedPeople[person.ID] = person
+									})
+									return fetchedPeople
 					case RECEIVE_PEOPLE_BY_PARTY:
 									return Object.assign({}, state, action.people)
 					case SET_PLUS_ONE_NAME:
@@ -124,17 +133,17 @@ function codeWord(state = initialState.codeWord, action) {
 function fetching(state = initialState.fetching, action) {
 	switch (action.type) {
 					case REQUEST_PEOPLE:
-									fetchingPeople = {}
-									for(person in action.people) {
-										fetchingPeople[person] = true
-									}
-									return Object.assign({}, state, {people: fetchingPeople})
+									people = {}
+									action.people.forEach(person => {
+										people[person] = true
+									})
+									return Object.assign({}, state, {people: people})
 					case RECEIVE_PEOPLE:
-									fetchingPeople = {}
-									for(person in action.people) {
-										fetchingPeople[person] = false 
-									}
-									return Object.assign({}, state, {people: fetchingPeople})
+									people = {}
+									action.people.forEach(person => {
+										people[person] = false 
+									})
+									return Object.assign({}, state, {people: people})
 					case REQUEST_PARTIES:
 									parties = {}
 									action.parties.forEach(party => {
@@ -177,17 +186,17 @@ function fetching(state = initialState.fetching, action) {
 function reduceErrors(state = initialState.errors, action) {
 	switch (action.type) {
 					case REQUEST_PEOPLE:
-									errorPeople = {}
-									for(person in action.people) {
-										errorPeople[person] = null
-									}
-									return Object.assign({}, state, {people: errorPeople})
+									people = {}
+									action.people.forEach(person => {
+										people[person] = null
+									})
+									return Object.assign({}, state, {people: people})
 					case RECEIVE_PEOPLE:
-									errorPeople = {}
-									for(person in action.people) {
-										errorPeople[person] = null 
-									}
-									return Object.assign({}, state, {people: errorPeople})
+									people = {}
+									action.people.forEach(person => {
+										people[person] = null 
+									})
+									return Object.assign({}, state, {people: people})
 					// TODO(paddy): add RECEIVE_PEOPLE_ERROR to set errors
 					case REQUEST_PARTIES:
 									parties = {}
@@ -230,7 +239,7 @@ function filters(state = initialState.filters, action) {
 function sort(state = initialState.sort, action) {
 	switch (action.type) {
 					case SET_SORT_FIELD:
-									return Object.assign({}, state, {field: action.field, dir: 1})
+									return Object.assign({}, state, {field: action.field})
 					case CHANGE_SORT_DIR:
 									return Object.assign({}, state, {dir: state.dir * -1})
 					default:

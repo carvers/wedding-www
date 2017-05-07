@@ -17,6 +17,14 @@ export const RECEIVE_NOT_FOUND_CODE_WORD = 'RECEIVE_NOT_FOUND_CODE_WORD'
 // set someone's +1
 export const SET_PLUS_ONE_NAME = 'SET_PLUS_ONE_NAME'
 
+// parties by ID loading
+export const REQUEST_PARTIES = 'REQUEST_PARTIES'
+export const RECEIVE_PARTIES = 'RECEIVE_PARTIES'
+
+// people by ID loading
+export const REQUEST_PEOPLE = 'REQUEST_PEOPLE'
+export const RECEIVE_PEOPLE = 'RECEIVE_PEOPLE'
+
 // server error encountered
 export const RECEIVE_SERVER_ERROR = 'RECEIVE_SERVER_ERROR'
 export const receiveServerError = (details) => ({
@@ -53,6 +61,10 @@ export const setFilterDiet = diet => ({
 export const setFilterStatus = status => ({
 	type: SET_FILTER_STATUS,
 	status
+})
+
+export const clearFilters = () => ({
+	type: CLEAR_FILTERS,
 })
 
 export const setSortField = field => ({
@@ -156,12 +168,71 @@ const shouldFetchPartyByCodeWord = (state, word) => {
   if (!partyID) {
     return true
 	}
-  return shouldFetchParty(state, partyID.partyID)
+  return shouldFetchParties(state, [partyID.partyID])
 }
 
 export const fetchPartyByCodeWordIfNeeded = word => (dispatch, getState) => {
 	if (shouldFetchPartyByCodeWord(getState(), word)) {
 		return dispatch(fetchPartyByCodeWord(word))
+  }
+}
+
+// Async fetch parties by ID (maybe)
+export const requestParties = parties => ({
+  type: REQUEST_PARTIES,
+  parties,
+})
+
+export const receiveParties = (json) => {
+	return {
+		type: RECEIVE_PARTIES,
+		parties: json.parties,
+	}
+}
+
+const fetchParties = (parties, token) => dispatch => {
+	dispatch(requestParties(parties))
+	let u = url+`/parties?`
+	if (parties) {
+		parties.forEach(id => {
+			u += 'party_id='+id+'&'
+		})
+	}
+	return fetch(u, {headers: new Headers({
+		'Authorization': 'Bearer '+token,
+	}), credentials: 'include',
+	mode: 'cors'})
+		.then(response => {
+			if(response.headers.get('Content-Type') == 'application/json') {
+				return response.json().then(resp => ({data: resp, response: response}))
+			}
+			return response.text().then(resp => ({data: resp, response: response}))
+		})
+		.then(response => {
+			if (response.response.ok) {
+				dispatch(receiveParties(response.data))
+			} else {
+				dispatch(receiveServerError({parties: parties}))
+			}
+		})
+}
+
+const shouldFetchParties = (state, parties) => {
+	if (parties.length < 1) {
+		return true
+	}
+	let found = true
+	parties.forEach(id => {
+		if (!state.rsvp.fetching.parties[id]) {
+			found = false
+		}
+	})
+	return !found
+}
+
+export const fetchPartiesIfNeeded = (parties, token) => (dispatch, getState) => {
+	if (shouldFetchParties(getState(), parties)) {
+		return dispatch(fetchParties(parties, token))
   }
 }
 
@@ -199,4 +270,63 @@ const fetchPeopleByParty = (party, codeWord) => dispatch => {
 export const fetchPeopleByPartyIfNeeded = (party, codeWord) => (dispatch, getState) => {
 	// TODO(paddy): cache this
 	return dispatch(fetchPeopleByParty(party, codeWord))
+}
+
+// Async fetch people (maybe) by ID
+export const requestPeople = (people) => ({
+  type: REQUEST_PEOPLE,
+	people,
+})
+
+export const receivePeople = (json) => {
+	return {
+		type: RECEIVE_PEOPLE,
+		people: json.people,
+	}
+}
+
+const fetchPeople = (people, token) => dispatch => {
+	dispatch(requestPeople(people))
+	let u = url+`/people?`
+	if (people) {
+		people.forEach(id => {
+			u += 'person_id='+id+'&'
+		})
+	}
+	return fetch(u, {headers: new Headers({
+		'Authorization': 'Bearer '+token,
+	}), credentials: 'include',
+	mode: 'cors'})
+	.then(response => {
+		if(response.headers.get('Content-Type') == 'application/json') {
+			return response.json().then(resp => ({data: resp, response: response}))
+		}
+		return response.text().then(resp => ({data: resp, response: response}))
+	})
+	.then(response => {
+		if (response.response.ok) {
+			dispatch(receivePeople(response.data))
+		} else {
+			dispatch(receiveServerError({parties: parties}))
+		}
+	})
+}
+
+const shouldFetchPeople = (state, people) => {
+	if (people.length < 1) {
+		return true
+	}
+	let found = true
+	people.forEach(id => {
+		if (!state.rsvp.fetching.people[id]) {
+			found = false
+		}
+	})
+	return !found
+}
+
+export const fetchPeopleIfNeeded = (people, token) => (dispatch, getState) => {
+	if (shouldFetchPeople(getState(), people)) {
+		return dispatch(fetchPeople(people, token))
+  }
 }
