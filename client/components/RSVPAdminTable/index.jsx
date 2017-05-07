@@ -35,7 +35,7 @@ export default class RSVPAdminTable extends React.Component {
 				<td><Link to={'/rsvp/admin/party/'+person.party} title={partyName}>{partyName}</Link></td>
 				<td className={styles.centered + ' ' + statusStyle}>{status}</td>
 				<td className={styles.centered}>{restrictions}</td>
-				<td className={styles.centered}><a href={'/rsvp/party.html?codeWord='+codeWord} title={'Edit '+person.name+'’s Response'}>Edit</a></td>
+				<td className={styles.centered}><Link to={'/rsvp/?codeWord='+codeWord} title={'Edit '+person.name+'’s Response'}>Edit</Link></td>
 			</tr>
 		})
 		let nameSort = ''

@@ -12,6 +12,7 @@ class RSVP extends React.Component {
 		codeWord: React.PropTypes.string,
 		party: React.PropTypes.object,
 		people: React.PropTypes.object,
+		location: React.PropTypes.object,
 		dispatch: React.PropTypes.func.isRequired,
 		errors: React.PropTypes.object,
 	}
@@ -97,6 +98,21 @@ class RSVP extends React.Component {
 		return Object.values(people)
 	}
 
+	componentDidMount() {
+		if (this.props.codeWord !== null && this.props.codeWord.length > 0 && this.props.party.ID !== undefined) {
+			this.fetchPartyByCodeWord(this.props.codeWord)
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.codeWord === this.props.codeWord && this.props.party.ID !== undefined) {
+			return
+		}
+		if (this.props.codeWord !== null && this.props.codeWord.length > 0 && this.props.party.ID === undefined) {
+			this.fetchPartyByCodeWord(this.props.codeWord)
+		}
+	}
+
 	render() {
 		if (this.props.codeWord === null || this.props.codeWord.length < 1) {
 			return (
@@ -110,16 +126,26 @@ class RSVP extends React.Component {
 	}
 }
 
-const mapStateToProps = state => {
-	const codeWord = state.rsvp.codeWord
+const mapStateToProps = (state, ownProps) => {
+	let codeWord = state.rsvp.codeWord
+	if (ownProps && ownProps.location && ownProps.location.query) {
+		const qcw = ownProps.location.query.codeWord
+		if (qcw && qcw.length > 0) {
+			codeWord = qcw
+		}
+	}
 	let partyID = ''
 	if (codeWord && state.rsvp.codeWords[codeWord]) {
 		partyID = state.rsvp.codeWords[codeWord].partyID
 	}
+	let party = {}
+	if (state.rsvp.parties[partyID] !== undefined) {
+		party = state.rsvp.parties[partyID]
+	}
 
   return {
 		codeWord,
-		party: state.rsvp.parties[partyID],
+		party,
 		people: state.rsvp.people,
 		errors: state.rsvp.errors,
   }

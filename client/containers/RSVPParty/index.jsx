@@ -17,7 +17,6 @@ class PersonDetails extends React.Component {
 
 	render() {
 		const {person, dispatch} = this.props
-		console.log(person)
 		if (person.attendingChecked == 'no' || (person.replied && !person.reply)) {
 			return null
 		}
@@ -96,8 +95,17 @@ class RSVPParty extends React.Component {
 
 	componentDidMount() {
 		window.scrollTo(0, 0)
-		const { dispatch, partyID, codeWord} = this.props
-		dispatch(fetchPeopleByPartyIfNeeded(partyID, codeWord))
+		const { dispatch, partyID, codeWord } = this.props
+		if (partyID && codeWord) {
+			dispatch(fetchPeopleByPartyIfNeeded(partyID, codeWord))
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		const { dispatch, partyID, codeWord, people} = this.props
+		if (partyID && codeWord && (partyID !== prevProps.partyID || codeWord !== prevProps.codeWord)) {
+			dispatch(fetchPeopleByPartyIfNeeded(partyID, codeWord))
+		}
 	}
 
 	renderPeople(people) {
