@@ -9,11 +9,13 @@ import { SET_FILTER_NAME, SET_FILTER_DIET, SET_FILTER_STATUS, CLEAR_FILTERS,
 				 REQUEST_PARTY_BY_CODE_WORD, RECEIVE_PARTY_BY_CODE_WORD, RECEIVE_NOT_FOUND_CODE_WORD,
 				 REQUEST_PEOPLE_BY_PARTY, RECEIVE_PEOPLE_BY_PARTY,
 				 RECEIVE_SERVER_ERROR,
+				 SET_ADMIN_TOKEN,
 } from '../actions'
 
 import errors from '../errors'
 
 const initialState = {
+	token: '',
 	people: {},
 	parties: {},
 	codeWords: {},
@@ -36,7 +38,7 @@ const initialState = {
 	sort: {
 		field: '',
 		dir: 1,
-	}
+	},
 }
 
 function parties(state = initialState.parties, action) {
@@ -247,6 +249,15 @@ function sort(state = initialState.sort, action) {
 	}
 }
 
+function token(state = initialState.token, action) {
+	switch (action.type) {
+					case SET_ADMIN_TOKEN:
+									return action.token
+					default:
+									return state
+	}
+}
+
 const weddingApp = combineReducers({
 	parties,
 	people,
@@ -256,6 +267,7 @@ const weddingApp = combineReducers({
 	fetching,
 	filters,
 	sort,
+	token,
 })
 
 export default weddingApp

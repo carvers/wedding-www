@@ -3,12 +3,13 @@ import {Link} from 'react-router'
 import update from 'immutability-helper'
 import { connect } from 'react-redux'
 
+import RSVPAdminAuth from '../../components/RSVPAdminAuth'
 import RSVPAdminFilterBar from '../../components/RSVPAdminFilterBar'
 import RSVPAdminStats from '../../components/RSVPAdminStats'
 import RSVPAdminTable from '../../components/RSVPAdminTable'
 
 
-import { fetchPartiesIfNeeded, fetchPeopleIfNeeded, setFilterName, setFilterDiet, setFilterStatus, clearFilters, setSortField, changeSortDir } from '../../actions'
+import { fetchPartiesIfNeeded, fetchPeopleIfNeeded, setFilterName, setFilterDiet, setFilterStatus, clearFilters, setSortField, changeSortDir, setAdminToken } from '../../actions'
 
 class RSVPAdmin extends React.Component {
 	static propTypes = {
@@ -19,13 +20,22 @@ class RSVPAdmin extends React.Component {
 		sortDir: React.PropTypes.number,
 		people: React.PropTypes.object,
 		parties: React.PropTypes.object,
+		token: React.PropTypes.string,
 		dispatch: React.PropTypes.func.isRequired,
 	}
 
-	componentWillMount() {
-		const token = ''
-		this.loadParties(token)
-		this.loadPeople(token)
+	componentDidMount() {
+		if (this.props.token !== null && this.props.token.length > 0) {
+			this.loadParties(this.props.token)
+			this.loadPeople(this.props.token)
+		}
+	}
+
+	componentDidUpdate() {
+		if (this.props.token !== null && this.props.token.length > 0) {
+			this.loadParties(this.props.token)
+			this.loadPeople(this.props.token)
+		}
 	}
 
 	loadPeople(token) {
@@ -63,6 +73,11 @@ class RSVPAdmin extends React.Component {
 		const { dispatch } = this.props
 		dispatch(setSortField(event.target.dataset.sortField))
 		dispatch(changeSortDir())
+	}
+
+	login = (token) => {
+		const { dispatch } = this.props
+		dispatch(setAdminToken(token))
 	}
 
 	sort(people, parties, field, direction) {
@@ -150,6 +165,11 @@ class RSVPAdmin extends React.Component {
 	}
 
 	render() {
+		if (this.props.token === null || this.props.token.length < 1) {
+			return (
+				<RSVPAdminAuth dispatch={this.login} />
+			)
+		}
 		const filteredPeople = this.sort(this.filter(this.props.people, this.props.nameFilter, this.props.dietFilter, this.props.statusFilter), this.props.parties, this.props.sortField, this.props.sortDir)
 		return (
 			<div>
@@ -178,6 +198,7 @@ const mapStateToProps = state => {
 		sortDir: sortDir,
 		people: state.rsvp.people,
 		parties: state.rsvp.parties,
+		token: state.rsvp.token,
 	}
 }
 

@@ -25,6 +25,9 @@ export const RECEIVE_PARTIES = 'RECEIVE_PARTIES'
 export const REQUEST_PEOPLE = 'REQUEST_PEOPLE'
 export const RECEIVE_PEOPLE = 'RECEIVE_PEOPLE'
 
+// login
+export const SET_ADMIN_TOKEN = 'SET_ADMIN_TOKEN'
+
 // server error encountered
 export const RECEIVE_SERVER_ERROR = 'RECEIVE_SERVER_ERROR'
 export const receiveServerError = (details) => ({
@@ -329,4 +332,8 @@ export const fetchPeopleIfNeeded = (people, token) => (dispatch, getState) => {
 	if (shouldFetchPeople(getState(), people)) {
 		return dispatch(fetchPeople(people, token))
   }
+}
+
+export const setAdminToken = (token) => (dispatch, getState) => {
+	return dispatch({type: SET_ADMIN_TOKEN, token: token})
 }
