@@ -30,3 +30,13 @@
 	max-width: 325px;
 	max-height: 325px;
 }
+
+@media (max-width: 800px) {
+	.chart {
+		display: none;
+	}
+
+	.container {
+		font-size: 1em;
+	}
+}
