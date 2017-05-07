@@ -1,86 +1,68 @@
 import React from 'react'
 import {Link} from 'react-router'
 import update from 'immutability-helper'
+import { connect } from 'react-redux'
 
 import RSVPAdminFilterBar from '../../components/RSVPAdminFilterBar'
-import Spinner from '../../components/Spinner'
 import RSVPAdminStats from '../../components/RSVPAdminStats'
 import RSVPAdminTable from '../../components/RSVPAdminTable'
 
-export default class RSVPAdmin extends React.Component {
-	constructor(props, context) {
-		super(props, context)
 
-		this.state = {
-			loading: {},
-			nameFilter: '',
-			dietFilter: '',
-			statusFilter: '',
-			sortField: 'party',
-			sortDir: 1,
-			people: {},
-			parties: {},
-		}
+import { fetchPartiesIfNeeded, fetchPeopleIfNeeded, setFilterName, setFilterDiet, setFilterStatus, clearFilters, setSortField, changeSortDir } from '../../actions'
+
+class RSVPAdmin extends React.Component {
+	static propTypes = {
+		nameFilter: React.PropTypes.string,
+		dietFilter: React.PropTypes.string,
+		statusFilter: React.PropTypes.string,
+		sortField: React.PropTypes.string,
+		sortDir: React.PropTypes.number,
+		people: React.PropTypes.object,
+		parties: React.PropTypes.object,
+		dispatch: React.PropTypes.func.isRequired,
 	}
 
-	componentDidMount() {
-		this.loadParties()
-		this.loadPeople()
+	componentWillMount() {
+		const token = ''
+		this.loadParties(token)
+		this.loadPeople(token)
 	}
 
-	loadPeople() {
-		this.setState({'loading': update(this.state.loading, {$merge: {people: true}})})
-		fetch('http://192.168.86.123:4004/people')
-			.then((response) => {
-				return response.json()
-			})
-			.then((resp) => {
-				let people = {};
-				resp.people.forEach((person) => {
-					people[person.ID] = person
-				})
-				this.setState({'people': people, 'loading': update(this.state.loading, {$merge: {people: false}})})
-			})
+	loadPeople(token) {
+		const { dispatch } = this.props
+		dispatch(fetchPeopleIfNeeded([], token))
 	}
 
-	loadParties() {
-		this.setState({'loading': update(this.state.loading, {$merge: {parties: true}})})
-		fetch('http://192.168.86.123:4004/parties')
-			.then((response) => {
-				return response.json()
-			})
-			.then((resp) => {
-				let parties = {};
-				resp.parties.forEach((party) => {
-					parties[party.ID] = party
-				})
-				this.setState({'parties': parties, 'loading': update(this.state.loading, {$merge: {parties: false}})})
-			})
+	loadParties(token) {
+		const { dispatch } = this.props
+		dispatch(fetchPartiesIfNeeded([], token))
 	}
 
 	changeName = (event) => {
-		this.setState({'nameFilter': event.target.value})
+		const { dispatch } = this.props
+		dispatch(setFilterName(event.target.value))
 	}
 
 	changeDiet = (event) => {
-		this.setState({'dietFilter': event.target.value})
+		const { dispatch } = this.props
+		dispatch(setFilterDiet(event.target.value))
 	}
 
 	changeStatus = (event) => {
-		this.setState({'statusFilter': event.target.value})
+		const { dispatch } = this.props
+		dispatch(setFilterStatus(event.target.value))
 	}
 
 	clearFilters = (event) => {
 		event.preventDefault()
-		this.setState({'nameFilter': '', 'dietFilter': '', 'statusFilter': ''})
+		const { dispatch } = this.props
+		dispatch(clearFilters())
 	}
 
 	changeSort = (event) => {
-		let dir = 1
-		if (this.state.sortField == event.target.dataset.sortField) {
-			dir = this.state.sortDir * -1
-		}
-		this.setState({'sortDir': dir, 'sortField': event.target.dataset.sortField})
+		const { dispatch } = this.props
+		dispatch(setSortField(event.target.dataset.sortField))
+		dispatch(changeSortDir())
 	}
 
 	sort(people, parties, field, direction) {
@@ -168,14 +150,35 @@ export default class RSVPAdmin extends React.Component {
 	}
 
 	render() {
-		const filteredPeople = this.sort(this.filter(this.state.people, this.state.nameFilter, this.state.dietFilter, this.state.statusFilter), this.state.parties, this.state.sortField, this.state.sortDir)
+		const filteredPeople = this.sort(this.filter(this.props.people, this.props.nameFilter, this.props.dietFilter, this.props.statusFilter), this.props.parties, this.props.sortField, this.props.sortDir)
 		return (
 			<div>
-				<Spinner active={this.state.loading} />
-				<RSVPAdminStats coming={this.filter(this.state.people, '', '', 'yes').length} notComing={this.filter(this.state.people, '', '', 'no').length} noResponse={this.filter(this.state.people, '', '', '?').length} />
-				<RSVPAdminFilterBar count={filteredPeople.length} onDietChange={this.changeDiet} onStatusChange={this.changeStatus} onNameChange={this.changeName} onClearFilters={this.clearFilters} dietValue={this.state.dietFilter} nameValue={this.state.nameFilter} statusValue={this.state.statusFilter} />
-				<RSVPAdminTable people={filteredPeople} parties={this.state.parties} sortField={this.state.sortField} sortDir={this.state.sortDir} sortHandler={this.changeSort} />
+				<RSVPAdminStats coming={this.filter(this.props.people, '', '', 'yes').length} notComing={this.filter(this.props.people, '', '', 'no').length} noResponse={this.filter(this.props.people, '', '', '?').length} />
+				<RSVPAdminFilterBar count={filteredPeople.length} onDietChange={this.changeDiet} onStatusChange={this.changeStatus} onNameChange={this.changeName} onClearFilters={this.clearFilters} dietValue={this.props.dietFilter} nameValue={this.props.nameFilter} statusValue={this.props.statusFilter} />
+				<RSVPAdminTable people={filteredPeople} parties={this.props.parties} sortField={this.props.sortField} sortDir={this.props.sortDir} sortHandler={this.changeSort} />
 			</div>
-		);
+		)
 	}
 }
+
+const mapStateToProps = state => {
+	let sortField = 'party'
+	let sortDir = 1
+	if (state.rsvp.sort.field) {
+		sortField = state.rsvp.sort.field
+	}
+	if (state.rsvp.sort.dir == 1 || state.rsvp.sort.dir == -1) {
+		sortDir = state.rsvp.sort.dir
+	}
+	return {
+		nameFilter: state.rsvp.filters.name,
+		dietFilter: state.rsvp.filters.diet,
+		statusFilter: state.rsvp.filters.status,
+		sortField: sortField,
+		sortDir: sortDir,
+		people: state.rsvp.people,
+		parties: state.rsvp.parties,
+	}
+}
+
+export default connect(mapStateToProps)(RSVPAdmin)
