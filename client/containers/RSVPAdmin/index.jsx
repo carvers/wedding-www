@@ -3,6 +3,7 @@ import {Link} from 'react-router'
 import update from 'immutability-helper'
 import { connect } from 'react-redux'
 
+import RSVPAdminActivities from '../../components/RSVPAdminActivities'
 import RSVPAdminAuth from '../../components/RSVPAdminAuth'
 import RSVPAdminFilterBar from '../../components/RSVPAdminFilterBar'
 import RSVPAdminStats from '../../components/RSVPAdminStats'
@@ -167,6 +168,68 @@ class RSVPAdmin extends React.Component {
 		})
 	}
 
+	activityCount(people, activity) {
+		let count = 0
+		Object.values(people).forEach(person => {
+			if (!person.replied || !person.reply) {
+				return
+			}
+			switch (activity) {
+							case 'hiking':
+											if (person.hiking) {
+												count++
+											}
+											break
+							case 'kayaking':
+											if (person.kayaking) {
+												count++
+											}
+											break
+							case 'jetski':
+											if (person.jetski) {
+												count++
+											}
+											break
+							case 'fishing':
+											if (person.fishing) {
+												count++
+											}
+											break
+							case 'hanford':
+											if (person.hanford) {
+												count++
+											}
+											break
+							case 'ligo':
+											if (person.ligo) {
+												count++
+											}
+											break
+							case 'reach':
+											if (person.reach) {
+												count++
+											}
+											break
+							case 'bechtel':
+											if (person.bechtel) {
+												count++
+											}
+											break
+							case 'wine':
+											if (person.wine) {
+												count++
+											}
+											break
+							case 'escapeRoom':
+											if (person.escapeRoom) {
+												count++
+											}
+											break
+			}
+		})
+		return count
+	}
+
 	render() {
 		if (this.props.token === null || this.props.token.length < 1) {
 			return (
@@ -177,6 +240,18 @@ class RSVPAdmin extends React.Component {
 		return (
 			<div>
 				<RSVPAdminStats coming={this.filter(this.props.people, '', '', 'yes').length} notComing={this.filter(this.props.people, '', '', 'no').length} noResponse={this.filter(this.props.people, '', '', '?').length} />
+				<RSVPAdminActivities
+					hiking={this.activityCount(this.props.people, 'hiking')}
+					kayaking={this.activityCount(this.props.people, 'kayaking')}
+					jetski={this.activityCount(this.props.people, 'kayaking')}
+					fishing={this.activityCount(this.props.people, 'fishing')}
+					hanford={this.activityCount(this.props.people, 'hanford')}
+					ligo={this.activityCount(this.props.people, 'ligo')}
+					reach={this.activityCount(this.props.people, 'reach')}
+					bechtel={this.activityCount(this.props.people, 'bechtel')}
+					wine={this.activityCount(this.props.people, 'wine')}
+					escapeRoom={this.activityCount(this.props.people, 'escapeRoom')}
+				/>
 				<RSVPAdminFilterBar count={filteredPeople.length} onDietChange={this.changeDiet} onStatusChange={this.changeStatus} onNameChange={this.changeName} onClearFilters={this.clearFilters} dietValue={this.props.dietFilter} nameValue={this.props.nameFilter} statusValue={this.props.statusFilter} />
 				<RSVPAdminTable people={filteredPeople} parties={this.props.parties} sortField={this.props.sortField} sortDir={this.props.sortDir} sortHandler={this.changeSort} />
 			</div>
